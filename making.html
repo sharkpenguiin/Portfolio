@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Making of — 무엇을 AI에 맡기고 무엇을 판단했나 · 조명호</title>
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="Making of — 이 포트폴리오는 무엇을 AI에 맡기고 무엇을 직접 판단했나">
+<meta property="og:description" content="이 사이트를 만든 과정 자체가 'AI를 통제하는 판단 기준을 설계한다'의 증거. AI 담당과 사람 판단의 경계를 공개합니다.">
+<meta name="description" content="포트폴리오 제작 과정에서 AI에 맡긴 것과 직접 판단한 것의 경계 — 검증 기준의 살아있는 증거.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
+    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
+    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-bg:#E4EDE6; --green-tx:#46654F;
+    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fx.in{opacity:1;transform:none;}
+
+  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
+  .nav-logo a{color:inherit;}
+  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
+  .nav-links{display:flex;gap:18px;font-size:13px;flex-wrap:wrap;}
+  .nav-links a{color:var(--sub);transition:color .15s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:700;}
+
+  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
+  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
+  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
+  .lead{color:var(--sub);max-width:720px;margin-top:6px;font-size:16.5px;}
+
+  section{padding:64px 0;}
+  section.tint{background:var(--tint);}
+  .sec-head{margin-bottom:28px;}
+  h2{font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
+  .sec-desc{color:var(--sub);max-width:700px;}
+
+  /* boundary table */
+  .boundary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .bcol{border-radius:18px;padding:26px 26px;box-shadow:var(--sh-sm);}
+  .bcol.ai{background:var(--paper);border:1px solid var(--line);}
+  .bcol.human{background:var(--ink);color:#F3F3F5;}
+  .bcol .bk{font-size:11.5px;font-weight:800;letter-spacing:.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .bcol.ai .bk{color:var(--sub);}
+  .bcol.human .bk{color:#9A9AA2;}
+  .bcol ul{list-style:none;}
+  .bcol li{font-size:14px;padding:9px 0;border-top:1px dashed var(--line2);display:flex;gap:10px;}
+  .bcol.human li{border-top-color:rgba(255,255,255,.12);}
+  .bcol li:first-child{border-top:none;}
+  .bcol li .mk{font-weight:800;}
+  .bcol.ai li .mk{color:var(--sub);}
+  .bcol.human li .mk{color:#fff;}
+
+  /* pipeline */
+  .pipe{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+  .pstep{flex:1;min-width:150px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 18px;box-shadow:var(--sh-sm);position:relative;}
+  .pstep .n{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:8px;}
+  .pstep b{display:block;font-size:14.5px;margin-bottom:5px;}
+  .pstep p{font-size:12.5px;color:var(--sub);}
+  .pstep .who{font-size:10.5px;font-weight:800;border-radius:99px;padding:2px 8px;position:absolute;top:16px;right:16px;}
+  .pstep .who.ai{background:var(--tint);color:var(--sub);}
+  .pstep .who.hu{background:var(--ink);color:#fff;}
+
+  .verify{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+  .vc{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--sh-sm);}
+  .vc .chk{color:var(--green-tx);font-weight:800;font-size:12px;margin-bottom:8px;}
+  .vc b{display:block;font-size:14.5px;margin-bottom:5px;}
+  .vc p{font-size:12.5px;color:var(--sub);}
+
+  .judge{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:14px;padding:22px 26px;box-shadow:var(--sh-sm);margin:24px 0;font-size:14.5px;line-height:1.72;}
+  .judge b{font-size:12.5px;letter-spacing:.08em;display:block;margin-bottom:10px;}
+  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:24px;line-height:1.72;}
+  .insight b{color:var(--ink);}
+  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  @media(max-width:760px){ h1{font-size:28px;} .boundary{grid-template-columns:1fr;} .verify{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
+    <div class="nav-links">
+      <a href="index.html">홈</a>
+      <a href="case-erp.html">B2B ERP</a>
+      <a href="case-ai.html">AI 시스템</a>
+      <a href="case-proto.html">프로토타입</a>
+      <a href="case-public.html">공공·플랫폼</a>
+      <a href="making.html" class="active">Making of</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">MAKING OF THIS PORTFOLIO</span>
+    <h1>이 사이트는 AI가<br>“다” 만든 게 아닙니다</h1>
+    <p class="lead">맞습니다 — 이 포트폴리오는 AI로 만들었습니다. 하지만 핵심은 그게 아니라, <b>무엇을 AI에 맡기고 무엇을 직접 판단했는가</b>입니다. 그 경계를 공개하는 이 페이지 자체가, “AI를 통제하는 판단 기준을 설계한다”는 주장의 살아있는 증거입니다.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">경계</span>AI가 한 것 · 사람이 판단한 것</h2>
+      <p class="sec-desc">생산(만드는 일)은 AI가, 판단(무엇을·왜)은 사람이 맡았습니다. 이 구분이 AI-native의 실제 의미입니다.</p>
+    </div>
+    <div class="boundary fx">
+      <div class="bcol ai">
+        <div class="bk">AI가 한 것 · 생산</div>
+        <ul>
+          <li><span class="mk">·</span>HTML/CSS 마크업 생성</li>
+          <li><span class="mk">·</span>SVG 다이어그램·아이콘 작도</li>
+          <li><span class="mk">·</span>인터랙션 JS 작성 (모달·필터·데모)</li>
+          <li><span class="mk">·</span>반복 컴포넌트 양산·톤 통일</li>
+          <li><span class="mk">·</span>카피 초안 제안</li>
+        </ul>
+      </div>
+      <div class="bcol human">
+        <div class="bk">사람(Kai)이 판단한 것 · 결정</div>
+        <ul>
+          <li><span class="mk">·</span>포지셔닝·서사 구조 결정</li>
+          <li><span class="mk">·</span>콘텐츠 팩트·수치의 진위 확인</li>
+          <li><span class="mk">·</span>디자인 톤·색 방향 결정 (모노톤 선택)</li>
+          <li><span class="mk">·</span>익명화·비밀유지 판단 (무엇을 뺄지)</li>
+          <li><span class="mk">·</span>최종 문구·검수 승인</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">과정</span>제작 파이프라인</h2>
+      <p class="sec-desc">막연히 “AI에게 사이트 만들어줘”가 아니라, 판단과 생성을 나눈 단계로 운영했습니다.</p>
+    </div>
+    <div class="pipe fx">
+      <div class="pstep"><span class="who hu">사람</span><div class="n">01</div><b>구조안</b><p>목차·관통 메시지 확정.</p></div>
+      <div class="pstep"><span class="who hu">사람</span><div class="n">02</div><b>콘텐츠맵</b><p>섹션별 소재·소스·익명화 범위 매핑.</p></div>
+      <div class="pstep"><span class="who hu">사람</span><div class="n">03</div><b>디자인 톤</b><p>레퍼런스 비교 후 방향 결정.</p></div>
+      <div class="pstep"><span class="who ai">AI</span><div class="n">04</div><b>페이지 생성</b><p>결정된 톤·콘텐츠로 HTML 제작.</p></div>
+      <div class="pstep"><span class="who ai">AI</span><div class="n">05</div><b>자동 검증</b><p>태그·금지어·데모 로직 테스트.</p></div>
+      <div class="pstep"><span class="who hu">사람</span><div class="n">06</div><b>검수·저장</b><p>최종 확인 후 정본 저장.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">검증</span>이 사이트도 “돌려서” 확인했습니다</h2>
+      <p class="sec-desc">프로토타입 케이스에서 말한 방법론을 이 사이트 자체에 적용했습니다. 말이 아니라 실행으로 품질을 담보합니다.</p>
+    </div>
+    <div class="verify fx">
+      <div class="vc"><div class="chk">✓ PASS</div><b>구조 무결성</b><p>모든 페이지의 태그 여닫음 균형을 자동 검사.</p></div>
+      <div class="vc"><div class="chk">✓ PASS</div><b>금지어 스캔</b><p>익명화·비밀유지 위반 표현(특정 수치·전 직장명 등)이 남지 않았는지 검사.</p></div>
+      <div class="vc"><div class="chk">✓ PASS</div><b>데모 로직 테스트</b><p>인터랙티브 데모의 핵심 규칙(검증·임시저장)을 실행 검증.</p></div>
+    </div>
+    <div class="judge fx"><b>WHY · 왜 이걸 공개하나</b>“AI가 다 해준 것 아니냐”는 질문은 AI-native를 내세우는 사람이라면 반드시 받습니다. 그 질문에 대한 답은 변명이 아니라 <b>경계를 보여주는 것</b>입니다. 무엇을 AI에 맡길지 판단하고, 그 산출물을 검증 기준으로 통제하는 것 — 그게 이 사이트를 만든 방식이자, 제가 일하는 방식입니다.</div>
+    <div class="insight fx"><b>도구를 잘 쓰는 것과 판단을 넘기는 것은 다릅니다</b> — 이 포트폴리오는 그 차이를 제작 과정으로 증명하려 했습니다.</div>
+  </div>
+</section>
+
+<div class="wrap next-nav">
+  <a href="case-public.html">← 공공·플랫폼</a>
+  <a href="about.html">다음: About →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
+    <span>Judgment-driven · AI-native PM</span>
+  </div>
+</footer>
+
+<script>
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
+</script>
+
+</body>
+</html>

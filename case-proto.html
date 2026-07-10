@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프로토타입 데모 — 동작하는 화면으로 전달 · 조명호</title>
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="프로토타입 데모 — 텍스트 스펙 대신 동작하는 화면으로 전달">
+<meta property="og:description" content="기획 의도를 문서가 아니라 동작하는 화면으로 전달하고, jsdom 자동화 테스트로 검증한 방법론.">
+<meta name="description" content="텍스트 스펙 대신 동작하는 프로토타입으로 기획을 전달하고 자동화 테스트로 검증한 방법론 — 인터랙티브 재현 샘플 포함.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
+    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
+    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-bg:#E4EDE6; --green-tx:#46654F;
+    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fx.in{opacity:1;transform:none;}
+
+  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
+  .nav-logo a{color:inherit;}
+  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
+  .nav-links{display:flex;gap:20px;font-size:13px;flex-wrap:wrap;}
+  .nav-links a{color:var(--sub);transition:color .15s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:700;}
+  .nav-links span.soon{color:#B4B4BA;cursor:default;}
+
+  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
+  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
+  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
+  .meta-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .mchip{font-size:13px;background:var(--paper);border:1px solid var(--line);padding:6px 13px;border-radius:99px;color:var(--sub);}
+  .lead{color:var(--sub);max-width:720px;margin-top:26px;font-size:16.5px;}
+
+  section{padding:72px 0;}
+  section.tint{background:var(--tint);}
+  .sec-head{margin-bottom:28px;}
+  h2{font-size:27px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
+  .sec-desc{color:var(--sub);max-width:700px;}
+  h3{font-size:18px;font-weight:800;margin:30px 0 12px;}
+
+  .judge{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:14px;padding:22px 26px;box-shadow:var(--sh-sm);margin:22px 0;font-size:14.5px;line-height:1.72;}
+  .judge b{display:flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.08em;margin-bottom:10px;}
+  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:22px;line-height:1.72;}
+  .insight b{color:var(--ink);}
+
+  /* compare: 문서 vs 화면 */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .vs .col{border-radius:16px;padding:24px;border:1px solid var(--line);box-shadow:var(--sh-sm);}
+  .vs .doc{background:var(--paper);}
+  .vs .scr{background:var(--ink);color:#F3F3F5;}
+  .vs .k{font-size:11.5px;font-weight:800;letter-spacing:.08em;margin-bottom:12px;color:var(--sub);}
+  .vs .scr .k{color:#9A9AA2;}
+  .vs b.t{display:block;font-size:16px;margin-bottom:8px;}
+  .vs .scr b.t{color:#fff;}
+  .vs p{font-size:13.5px;color:var(--sub);}
+  .vs .scr p{color:#B9B9C0;}
+
+  /* browser frame */
+  .frame{border-radius:16px;overflow:hidden;margin:8px 0 0;background:var(--paper);box-shadow:var(--sh);border:1px solid var(--line);}
+  .chrome{background:#F1F1F3;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+  .chrome .dots{display:flex;gap:6px;}
+  .chrome .dots i{width:11px;height:11px;border-radius:50%;display:block;}
+  .chrome .dots i:nth-child(1){background:#FF5F57;}
+  .chrome .dots i:nth-child(2){background:#FEBC2E;}
+  .chrome .dots i:nth-child(3){background:#28C840;}
+  .chrome .title{font-size:12.5px;color:var(--sub);}
+  .chrome .label{font-size:11.5px;font-weight:700;color:var(--amber-tx);background:var(--amber-bg);padding:3px 10px;border-radius:99px;margin-left:auto;}
+
+  /* prototype app */
+  .proto-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .proto-toolbar .count{font-size:13px;color:var(--sub);}
+  .proto-toolbar .count b{color:var(--ink);}
+  .btn{font-family:inherit;font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:opacity .15s;}
+  .btn:hover{opacity:.88;}
+  .btn.ghost{background:var(--paper);color:var(--ink);border-color:var(--line2);}
+  .btn.ghost:hover{border-color:var(--ink);opacity:1;}
+  .proto-main{display:grid;grid-template-columns:1fr 1fr;min-height:280px;}
+  .proto-list{list-style:none;border-right:1px solid var(--line);}
+  .proto-list li{padding:14px 20px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .12s;}
+  .proto-list li:hover{background:var(--tint);}
+  .proto-list li.sel{background:var(--tint);box-shadow:inset 3px 0 0 var(--ink);}
+  .proto-list .nm{font-size:14px;font-weight:600;}
+  .badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;}
+  .badge.ok{background:var(--green-bg);color:var(--green-tx);}
+  .badge.tmp{background:var(--amber-bg);color:var(--amber-tx);}
+  .badge.stop{background:var(--tint);color:var(--sub);border:1px solid var(--line2);}
+  .proto-detail{padding:22px 24px;font-size:14px;}
+  .proto-detail .dnm{font-size:18px;font-weight:800;margin-bottom:4px;}
+  .proto-detail .drow{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line2);font-size:13.5px;}
+  .proto-detail .drow:last-child{border-bottom:none;}
+  .proto-detail .dk{color:var(--sub);min-width:88px;}
+  .proto-detail .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;}
+  .proto-empty{color:var(--sub);font-size:13.5px;padding-top:8px;}
+
+  /* modal */
+  .backdrop{position:fixed;inset:0;background:rgba(20,20,25,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;}
+  .backdrop[hidden]{display:none;}
+  .modal{background:var(--paper);border-radius:18px;padding:28px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.25);}
+  .modal h4{font-size:18px;font-weight:800;margin-bottom:18px;}
+  .modal label{display:block;font-size:12.5px;font-weight:700;color:var(--sub);margin-bottom:16px;}
+  .modal input,.modal select{width:100%;margin-top:6px;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line2);border-radius:10px;background:#fff;color:var(--ink);}
+  .modal input:focus,.modal select:focus{outline:none;border-color:var(--ink);}
+  .modal .err{background:var(--amber-bg);color:var(--amber-tx);font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:9px;margin-bottom:14px;}
+  .modal .err[hidden]{display:none;}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;}
+
+  /* code block */
+  .code{background:#1A1A1F;color:#E7E7EA;border-radius:16px;padding:24px 22px;overflow-x:auto;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;line-height:1.7;margin-top:8px;box-shadow:var(--sh);}
+  .code .cm{color:#8C8C92;}
+  .code .kw{color:#C8B4F0;}
+  .code .st{color:#9FD0A8;}
+  .code .fn{color:#8FC7E8;}
+  .test-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+  .test-steps .ts{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--sh-sm);}
+  .test-steps .ts .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:10px;}
+  .test-steps .ts b{display:block;font-size:15px;margin-bottom:6px;}
+  .test-steps .ts p{font-size:13px;color:var(--sub);}
+
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
+  .next-nav .muted{color:#B4B4BA;}
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  @media(max-width:760px){
+    h1{font-size:28px;}
+    .vs{grid-template-columns:1fr;}
+    .proto-main{grid-template-columns:1fr;}
+    .proto-list{border-right:none;border-bottom:1px solid var(--line);}
+    .test-steps{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
+    <div class="nav-links">
+      <a href="index.html">홈</a>
+      <a href="case-erp.html">B2B ERP</a>
+      <a href="case-ai.html">AI 시스템</a>
+      <a href="case-proto.html" class="active">프로토타입</a>
+      <a href="case-public.html">공공·플랫폼</a>
+      <a href="making.html">Making of</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">CASE 03 · 프로토타입 데모</span>
+    <h1>텍스트 스펙 대신<br>동작하는 화면으로 전달</h1>
+    <div class="meta-chips">
+      <span class="mchip">인터랙티브 재현 샘플</span><span class="mchip">동작하는 화면 = 스펙</span><span class="mchip">jsdom 자동화 검증</span>
+    </div>
+    <p class="lead">문서로 “이렇게 동작합니다”라고 쓰는 대신, <b>실제로 눌러볼 수 있는 화면</b>으로 기획 의도를 전달합니다. 아래 데모는 마우스로 직접 조작해볼 수 있습니다. <em style="font-style:normal;color:var(--amber-tx)">가상 도메인으로 만든 재현 샘플이며 실제 산출물이 아닙니다.</em></p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">WHY</span>왜 문서가 아니라 화면인가</h2>
+      <p class="sec-desc">같은 기획을 전달하는 두 가지 방법. 오른쪽이 해석의 여지를 줄입니다.</p>
+    </div>
+    <div class="vs fx">
+      <div class="col doc">
+        <div class="k">문서 스펙</div>
+        <b class="t">“필수값이 없으면 임시저장으로 처리한다”</b>
+        <p>읽는 사람마다 ‘임시저장’의 동작을 다르게 상상합니다. 버튼 위치, 배지 표시, 목록 반영 방식은 결국 개발 단계에서 다시 질문으로 돌아옵니다.</p>
+      </div>
+      <div class="col scr">
+        <div class="k">동작하는 화면</div>
+        <b class="t">눌러보면 바로 안다</b>
+        <p>임시저장을 누르면 목록에 ‘임시’ 배지가 붙는다 — 설명이 필요 없습니다. 엣지 케이스(필수값 누락 시 등록 차단)도 직접 체험되므로 합의가 빨라집니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">DEMO</span>거래처 관리 · 직접 조작해보세요</h2>
+      <p class="sec-desc">항목을 클릭하면 상세가 열리고, ‘거래처 등록’으로 새 항목을 추가할 수 있습니다. 등록 시 사업자번호가 없으면 차단되고, 임시저장은 필수값 없이도 ‘임시’ 상태로 추가됩니다.</p>
+    </div>
+    <div class="frame fx">
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">거래처 관리 — 가상 도메인 (유통 ERP)</span><span class="label">인터랙티브 재현 샘플</span></div>
+      <div class="proto-toolbar">
+        <button class="btn" id="btnNew">+ 거래처 등록</button>
+        <span class="count"><b id="cnt">3</b>개 거래처 · 클릭해서 상세 보기</span>
+      </div>
+      <div class="proto-main">
+        <ul class="proto-list" id="list" aria-label="거래처 목록"></ul>
+        <div class="proto-detail" id="detail"><div class="proto-empty">왼쪽 목록에서 거래처를 선택하세요.</div></div>
+      </div>
+    </div>
+    <p class="hint">※ 데이터는 브라우저 메모리에만 저장되며 새로고침하면 초기화됩니다.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">검증</span>프로토타입도 테스트로 지킨다</h2>
+      <p class="sec-desc">동작하는 화면이라면 동작을 자동으로 검증할 수 있습니다. 위 데모의 핵심 규칙을 jsdom 기반 테스트로 고정해, 화면을 수정해도 규칙이 깨지지 않게 했습니다.</p>
+    </div>
+    <div class="judge fx"><b>WHY · 왜 테스트까지</b>프로토타입은 “한 번 보여주고 버리는 것”으로 취급되기 쉽지만, 기획 의도가 담긴 규칙(필수값 검증·임시저장 동작)은 이후 실제 개발의 기준이 됩니다. 테스트로 규칙을 코드화해 두면, 화면이 바뀌어도 <b>“무엇이 맞는 동작인지”</b>가 흔들리지 않습니다.</div>
+    <pre class="code fx"><span class="cm">// prototype.test.js — jsdom 자동화 검증 (발췌)</span>
+<span class="kw">test</span>(<span class="st">'등록 시 사업자번호가 없으면 저장을 막는다'</span>, () => {
+  <span class="fn">openModal</span>();
+  <span class="fn">fill</span>(<span class="st">'#f-name'</span>, <span class="st">'가상상사'</span>);      <span class="cm">// 사업자번호는 비움</span>
+  <span class="fn">click</span>(<span class="st">'#btnSave'</span>);
+  <span class="kw">expect</span>($(<span class="st">'#err'</span>).hidden).<span class="fn">toBe</span>(false);   <span class="cm">// 에러 노출</span>
+  <span class="kw">expect</span>(<span class="fn">rows</span>().length).<span class="fn">toBe</span>(3);          <span class="cm">// 목록 불변</span>
+});
+
+<span class="kw">test</span>(<span class="st">'임시저장은 필수값 없이도 항목을 추가한다'</span>, () => {
+  <span class="fn">openModal</span>();
+  <span class="fn">fill</span>(<span class="st">'#f-name'</span>, <span class="st">'임시 거래처'</span>);
+  <span class="fn">click</span>(<span class="st">'#btnDraft'</span>);
+  <span class="kw">expect</span>(<span class="fn">rows</span>().length).<span class="fn">toBe</span>(4);          <span class="cm">// 1건 추가</span>
+  <span class="kw">expect</span>(<span class="fn">lastBadge</span>()).<span class="fn">toBe</span>(<span class="st">'임시'</span>);       <span class="cm">// 임시 배지</span>
+});</pre>
+    <div class="test-steps fx">
+      <div class="ts"><div class="k">STEP 1</div><b>화면 제작</b><p>기획 의도를 실제 동작하는 HTML/JS 화면으로 구현.</p></div>
+      <div class="ts"><div class="k">STEP 2</div><b>규칙 테스트화</b><p>필수값 검증·임시저장 등 핵심 규칙을 jsdom 테스트로 고정.</p></div>
+      <div class="ts"><div class="k">STEP 3</div><b>회귀 방지</b><p>화면을 수정해도 규칙이 깨지면 테스트가 실패로 알림.</p></div>
+    </div>
+    <div class="insight fx"><b>기획도 “돌려서” 검증할 수 있습니다</b> — 프로토타입을 테스트 가능한 형태로 만들면, 기획 의도가 말이 아니라 실행 가능한 기준으로 남습니다. 이 포트폴리오 사이트 자체도 같은 방식으로 자동 검증하며 만들었습니다.</div>
+  </div>
+</section>
+
+<div class="wrap next-nav">
+  <a href="case-ai.html">← AI 시스템</a>
+  <a href="case-public.html">다음: 공공 SI · 플랫폼 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
+    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
+  </div>
+</footer>
+
+<div class="backdrop" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="거래처 등록">
+    <h4>거래처 등록</h4>
+    <div class="err" id="err" hidden>사업자번호는 등록 시 필수입니다. (임시저장은 가능)</div>
+    <label>거래처명<input id="f-name" type="text" placeholder="예: 가상상사"></label>
+    <label>사업자번호<input id="f-biz" type="text" placeholder="000-00-00000" inputmode="numeric"></label>
+    <label>유형<select id="f-type"><option>도매</option><option>소매</option><option>병원</option><option>기타</option></select></label>
+    <div class="modal-actions">
+      <button class="btn ghost" id="btnCancel">취소</button>
+      <button class="btn ghost" id="btnDraft">임시저장</button>
+      <button class="btn" id="btnSave">등록</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var data=[
+    {name:'가온유통',biz:'201-81-45021',type:'도매',status:'ok'},
+    {name:'미래약품',biz:'118-86-77302',type:'병원',status:'ok'},
+    {name:'한빛상사',biz:'',type:'소매',status:'stop'}
+  ];
+  var sel=-1;
+  var $=function(s){return document.querySelector(s);};
+  var list=$('#list'),detail=$('#detail'),cnt=$('#cnt'),modal=$('#modal'),err=$('#err');
+  var STAT={ok:['ok','정상'],tmp:['tmp','임시'],stop:['stop','중단']};
+
+  function render(){
+    list.innerHTML='';
+    data.forEach(function(d,i){
+      var li=document.createElement('li');
+      if(i===sel) li.className='sel';
+      li.setAttribute('data-i',i);
+      var s=STAT[d.status];
+      li.innerHTML='<span class="nm">'+esc(d.name)+'</span><span class="badge '+s[0]+'">'+s[1]+'</span>';
+      li.addEventListener('click',function(){sel=i;render();renderDetail();});
+      list.appendChild(li);
+    });
+    cnt.textContent=data.length;
+  }
+  function renderDetail(){
+    if(sel<0){detail.innerHTML='<div class="proto-empty">왼쪽 목록에서 거래처를 선택하세요.</div>';return;}
+    var d=data[sel],s=STAT[d.status];
+    detail.innerHTML='<div class="dnm">'+esc(d.name)+' <span class="badge '+s[0]+'">'+s[1]+'</span></div>'
+      +'<div class="drow"><span class="dk">사업자번호</span><span class="mono">'+(d.biz||'—')+'</span></div>'
+      +'<div class="drow"><span class="dk">유형</span><span>'+esc(d.type)+'</span></div>'
+      +'<div class="drow"><span class="dk">상태</span><span>'+s[1]+(d.status==='tmp'?' — 필수값 확인 후 정상 전환':'')+'</span></div>';
+  }
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function openModal(){err.hidden=true;$('#f-name').value='';$('#f-biz').value='';$('#f-type').value='도매';modal.hidden=false;$('#f-name').focus();}
+  function closeModal(){modal.hidden=true;}
+  function add(status){
+    var name=$('#f-name').value.trim()||'(이름 미입력)';
+    data.push({name:name,biz:$('#f-biz').value.trim(),type:$('#f-type').value,status:status});
+    sel=data.length-1;closeModal();render();renderDetail();
+  }
+  $('#btnNew').addEventListener('click',openModal);
+  $('#btnCancel').addEventListener('click',closeModal);
+  $('#btnDraft').addEventListener('click',function(){add('tmp');});
+  $('#btnSave').addEventListener('click',function(){
+    if(!$('#f-biz').value.trim()){err.hidden=false;return;}
+    add('ok');
+  });
+  modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+
+  render();
+
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
+})();
+</script>
+
+</body>
+</html>

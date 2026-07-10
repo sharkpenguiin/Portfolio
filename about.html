@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — 조명호 · Judgment-driven · AI-native PM</title>
+<meta property="og:type" content="profile">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="About — 조명호 · Judgment-driven · AI-native PM">
+<meta property="og:description" content="공공 SI 품질점검에서 B2B ERP End-to-End 오너십까지. AI를 통제하는 판단 기준을 설계하는 PM.">
+<meta name="description" content="조명호 — Judgment-driven · AI-native PM. 일하는 철학, 성장 서사, 도구, 학습.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
+    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
+    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fx.in{opacity:1;transform:none;}
+
+  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
+  .nav-logo a{color:inherit;}
+  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
+  .nav-links{display:flex;gap:18px;font-size:13px;flex-wrap:wrap;}
+  .nav-links a{color:var(--sub);transition:color .15s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:700;}
+
+  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
+  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
+  h1{font-size:38px;font-weight:800;line-height:1.25;margin-bottom:20px;letter-spacing:-.02em;}
+  h1 em{font-style:normal;color:var(--sub);}
+  .lead{color:var(--sub);max-width:720px;font-size:16.5px;}
+
+  section{padding:60px 0;}
+  section.tint{background:var(--tint);}
+  .sec-head{margin-bottom:26px;}
+  h2{font-size:24px;font-weight:800;margin-bottom:10px;letter-spacing:-.01em;}
+  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
+  .sec-desc{color:var(--sub);max-width:700px;}
+
+  .phil{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .pc{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:28px 26px;box-shadow:var(--sh-sm);}
+  .pc .n{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:14px;}
+  .pc b{display:block;font-size:17px;margin-bottom:10px;letter-spacing:-.01em;}
+  .pc p{font-size:13.5px;color:var(--sub);}
+
+  /* timeline */
+  .tl{position:relative;margin-top:8px;padding-left:22px;}
+  .tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:var(--line2);}
+  .tl .item{position:relative;padding:14px 0 14px 20px;}
+  .tl .item::before{content:"";position:absolute;left:-22px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--ink);border:2px solid var(--bg);}
+  .tl .ph{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--sub);margin-bottom:4px;}
+  .tl b{font-size:16px;display:block;margin-bottom:4px;}
+  .tl p{font-size:14px;color:var(--sub);}
+
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .kv .box{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;box-shadow:var(--sh-sm);}
+  .kv .box h3{font-size:13px;font-weight:800;color:var(--sub);letter-spacing:.06em;margin-bottom:14px;}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .tags span{font-size:13px;background:var(--tint);border:1px solid var(--line2);border-radius:99px;padding:6px 13px;}
+  .learn{font-size:14px;color:var(--ink);}
+  .learn .st{font-size:11px;font-weight:800;color:var(--amber-tx,#7A5E2A);background:#F1E8D3;border-radius:99px;padding:2px 9px;margin-left:6px;}
+
+  .contact{background:var(--ink);color:#F3F3F5;border-radius:20px;padding:40px 38px;text-align:center;}
+  .contact h2{color:#fff;margin-bottom:10px;}
+  .contact p{color:#B9B9C0;font-size:15px;margin-bottom:22px;}
+  .contact .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .contact a{background:#F3F3F5;color:var(--ink);padding:13px 26px;border-radius:12px;font-weight:700;font-size:14.5px;}
+  .contact a.ghost{background:transparent;color:#F3F3F5;border:1px solid rgba(255,255,255,.28);}
+
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  @media(max-width:760px){ h1{font-size:28px;} .phil{grid-template-columns:1fr;} .kv{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
+    <div class="nav-links">
+      <a href="index.html">홈</a>
+      <a href="case-erp.html">B2B ERP</a>
+      <a href="case-ai.html">AI 시스템</a>
+      <a href="case-proto.html">프로토타입</a>
+      <a href="case-public.html">공공·플랫폼</a>
+      <a href="making.html">Making of</a>
+      <a href="about.html" class="active">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">ABOUT</span>
+    <h1>조명호 <em>(Kai)</em><br>Judgment-driven · AI-native PM</h1>
+    <p class="lead">공공 SI 품질점검에서 시작해, 이커머스 광고 플랫폼 운영을 거쳐, B2B ERP를 요구 정의부터 개발 핸드오프까지 단독으로 이끌었습니다. 일관된 관심은 하나입니다 — <b>AI를 통제하는 판단 기준을 설계하는 것.</b></p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">PHILOSOPHY</span>일하는 철학</h2>
+      <p class="sec-desc">이 세 가지가 모든 케이스와 이 사이트를 관통합니다.</p>
+    </div>
+    <div class="phil fx">
+      <div class="pc"><div class="n">01</div><b>AI는 설계 대상</b><p>AI에 판단을 넘기지 않습니다. 무엇을 맡기고 무엇을 사람이 결정할지 경계를 먼저 설계하고, 산출물은 검증 기준으로 통제합니다.</p></div>
+      <div class="pc"><div class="n">02</div><b>반복은 시스템으로</b><p>같은 문제가 반복되면 사람의 부지런함이 아니라 템플릿·규칙·로그 체계가 기억하게 만듭니다.</p></div>
+      <div class="pc"><div class="n">03</div><b>판단과 책임은 PM</b><p>도구는 판단을 돕지, 대신하지 않습니다. 최종 결정과 그에 대한 책임은 사람이 집니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">JOURNEY</span>성장 서사</h2>
+      <p class="sec-desc">검증하는 눈 → 경계를 설계하는 감각 → End-to-End 오너십으로 확장돼 왔습니다.</p>
+    </div>
+    <div class="tl fx">
+      <div class="item"><div class="ph">STEP 1 · 공공 SI</div><b>대형 공공 정보화 사업 품질점검</b><p>요구사항·산출물을 앞단에서 점검. “뒤에서 고치는 것보다 앞에서 막는 게 싸다”는 front-loading 감각을 얻음.</p></div>
+      <div class="item"><div class="ph">STEP 2 · 플랫폼</div><b>이커머스 광고 도메인 운영 · AI 검수 기준 설계</b><p>AI 검수 도구의 한계를 분석하고, AI가 판단할 영역과 사람이 판단할 영역의 경계를 운영 기준으로 설계.</p></div>
+      <div class="item"><div class="ph">STEP 3 · B2B ERP</div><b>제약 유통 ERP 단독 기획 (End-to-End)</b><p>요구 정의부터 개발 핸드오프까지 오너십. 반복 업무는 커스텀 AI 스킬로 시스템화하고 산출물은 근거로 통제.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">TOOLKIT</span>도구와 학습</h2>
+    </div>
+    <div class="kv fx">
+      <div class="box">
+        <h3>주로 쓰는 도구</h3>
+        <div class="tags">
+          <span>Notion</span><span>Figma</span><span>Slack</span><span>SQL</span><span>Google Analytics</span><span>Claude</span><span>Gemini</span><span>Hermes Agent</span><span>Obsidian</span>
+        </div>
+      </div>
+      <div class="box">
+        <h3>학습 · 자격</h3>
+        <p class="learn">데이터 분석 준전문가 (ADSP) <span class="st">준비 중</span></p>
+        <p class="learn" style="margin-top:8px">SQL 개발자 (SQLD) <span class="st">준비 중</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="contact fx">
+      <h2>같이 이야기해요</h2>
+      <p>제품을 End-to-End로 이끌 PM을 찾고 계신다면 편하게 연락 주세요.</p>
+      <div class="btns">
+        <a href="mailto:wag8574@gmail.com">wag8574@gmail.com</a>
+        <a class="ghost" href="resume.pdf" target="_blank" rel="noopener">이력서 보기 (PDF)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 조명호 (Kai)</span>
+    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
+  </div>
+</footer>
+
+<script>
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제약 유통 B2B ERP — 기획 체계 설계 · 조명호</title>
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="제약 유통 B2B ERP — 기획을 '체계'로 만들어 통제한 기록">
+<meta property="og:description" content="거래처 5개 유형 × 18개 메뉴를 단독 기획. 회의마다 갱신되는 요구사항을 화면 단위 PRD·결정로그·파라미터 표로 통제한 과정.">
+<meta name="description" content="회의마다 요구사항이 바뀌는 B2B ERP 프로젝트에서 기획을 체계로 만들어 통제한 기록 — SCR-ID PRD·결정로그·파라미터 표.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
+    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
+    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-tx:#46654F;
+    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fx.in{opacity:1;transform:none;}
+
+  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
+  .nav-logo a{color:inherit;}
+  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
+  .nav-links{display:flex;gap:18px;font-size:13px;flex-wrap:wrap;}
+  .nav-links a{color:var(--sub);transition:color .15s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:700;}
+
+  /* hero — light */
+  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
+  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
+  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
+  .meta-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .mchip{font-size:13px;background:var(--paper);border:1px solid var(--line);padding:6px 13px;border-radius:99px;color:var(--sub);}
+
+  /* PJR */
+  .pjr{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px;}
+  .step{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:26px 24px;box-shadow:var(--sh-sm);position:relative;}
+  .step .n{width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .step b{display:block;font-size:13px;letter-spacing:.06em;color:var(--sub);margin-bottom:10px;}
+  .step p{font-size:14px;color:var(--ink);line-height:1.66;}
+
+  section{padding:76px 0;}
+  section.tint{background:var(--tint);}
+  .sec-head{margin-bottom:32px;}
+  h2{font-size:27px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
+  .sec-desc{color:var(--sub);max-width:680px;}
+  h3{font-size:18px;font-weight:800;margin:34px 0 12px;}
+
+  .judge{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:14px;padding:22px 26px;box-shadow:var(--sh-sm);margin:22px 0;font-size:14.5px;color:var(--ink);line-height:1.72;}
+  .judge b{color:var(--ink);display:flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.08em;margin-bottom:10px;}
+
+  /* sample browser frame */
+  .sample{border-radius:16px;overflow:hidden;margin:22px 0;background:var(--paper);box-shadow:var(--sh);border:1px solid var(--line);}
+  .chrome{background:#F1F1F3;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+  .chrome .dots{display:flex;gap:6px;}
+  .chrome .dots i{width:11px;height:11px;border-radius:50%;display:block;}
+  .chrome .dots i:nth-child(1){background:#FF5F57;}
+  .chrome .dots i:nth-child(2){background:#FEBC2E;}
+  .chrome .dots i:nth-child(3){background:#28C840;}
+  .chrome .label{font-size:11.5px;font-weight:700;color:var(--amber-tx);background:var(--amber-bg);padding:3px 10px;border-radius:99px;margin-left:6px;}
+  .chrome .title{font-size:12.5px;color:var(--sub);}
+  .sample-body{padding:22px;overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  th{background:var(--tint);font-weight:700;text-align:left;}
+  th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;color:var(--ink);white-space:nowrap;background:var(--tint);padding:1px 6px;border-radius:5px;}
+  .chip{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap;background:var(--tint);color:#55555C;border:1px solid var(--line2);}
+  .chip.attn{background:var(--amber-bg);color:var(--amber-tx);border-color:transparent;}
+  .legend{font-size:12.5px;color:var(--sub);margin-top:14px;line-height:1.9;}
+  .b-fix{color:var(--green-tx);font-weight:700;font-size:12.5px;white-space:nowrap;}
+  .b-ask{color:var(--amber-tx);font-weight:700;font-size:12.5px;white-space:nowrap;}
+
+  .filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .filters button{font-family:inherit;font-size:13px;padding:7px 16px;border:1px solid var(--line2);background:var(--paper);border-radius:99px;cursor:pointer;color:var(--sub);transition:all .15s;font-weight:600;}
+  .filters button:hover{border-color:var(--ink);color:var(--ink);}
+  .filters button.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+
+  .flow{margin:22px 0;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--sh-sm);}
+  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:22px;line-height:1.72;}
+  .insight b{color:var(--ink);}
+
+  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
+  .next-nav .muted{color:#B4B4BA;}
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  @media(max-width:760px){
+    .pjr{grid-template-columns:1fr;}
+    h1{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
+    <div class="nav-links">
+      <a href="index.html">홈</a>
+      <a href="case-erp.html" class="active">B2B ERP</a>
+      <a href="case-ai.html">AI 시스템</a>
+      <a href="case-proto.html">프로토타입</a>
+      <a href="case-public.html">공공·플랫폼</a>
+      <a href="making.html">Making of</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">CASE 01 · 제약 유통 B2B ERP 구축 (외주)</span>
+    <h1>회의마다 요구사항이 바뀌는 프로젝트에서,<br>기획을 “체계”로 만들어 통제한 기록</h1>
+    <div class="meta-chips">
+      <span class="mchip">거래처 5개 유형</span><span class="mchip">18개 메뉴</span><span class="mchip">병행 개발 환경</span><span class="mchip">외부·내부 회의 20회+</span><span class="mchip">요구정의 → 명세 → 핸드오프 단독 수행</span>
+    </div>
+    <div class="pjr fx">
+      <div class="step"><div class="n">1</div><b>문제</b><p>거래처 유형마다 요구·정책이 다르고, 매주 회의에서 요구사항이 갱신됨. 문서가 회의 속도를 못 따라가면 개발이 서로 다른 버전을 보고 만들게 되는 구조.</p></div>
+      <div class="step"><div class="n">2</div><b>판단</b><p>사람이 부지런해지는 대신 체계가 기억하게 한다 — 화면 단위 PRD(SCR-ID), 메뉴 단위 결정로그, 파라미터 표를 설계해 “최신 확정본”이 항상 한 곳에 있게 함.</p></div>
+      <div class="step"><div class="n">3</div><b>결과</b><p>명세 작성 시 과거 회의록 전체를 재검토할 필요가 사라지고, Cross-functional 팀이 같은 기준을 참조. 해석 차이·재작업 리스크를 구조적으로 차단.</p></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">01 · PRD 체계</span>화면 단위 SCR-ID 구조</h2>
+      <p class="sec-desc">요구사항 → 정책 → 필드가 한 흐름으로 이어지도록 화면(Screen) 단위로 문서를 짰습니다. 모든 요구사항에는 출처 태그가 붙습니다.</p>
+    </div>
+    <div class="judge fx"><b>WHY · 왜 이렇게 설계했나</b>메뉴 단위 문서는 커지면 아무도 안 읽게 되고, 기능 목록은 “왜”가 사라집니다. 개발자가 실제로 만드는 단위는 화면이므로, 화면 1개 = 문서 1섹션(SCR-ID)으로 맞추면 핸드오프에서 해석이 갈릴 틈이 줄어듭니다. 출처 태그는 “누가 원한 것인지”를 문서 시스템에 박아, 고객 요청과 PM 제안을 구분해 근거 없는 약속을 방지합니다.</div>
+    <div class="sample fx">
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">SCR-CLI-001 · 거래처 관리 — 등록 화면 (가상 도메인: 유통 ERP)</span><span class="label">재현 샘플</span></div>
+      <div class="sample-body">
+        <table>
+          <tr><th style="width:64px">구분</th><th>요구사항</th><th style="width:118px">출처</th><th>정책 → 필드 연결</th></tr>
+          <tr><td>등록</td><td>사업자번호 입력 시 중복·휴폐업 여부를 한 번에 확인</td><td><span class="chip">현업 요청</span></td><td>검증 버튼 1개로 3중 체크 → <span class="mono">biz_no</span> (필수·검증)</td></tr>
+          <tr><td>등록</td><td>필수값이 없어도 임시 상태로 저장 가능</td><td><span class="chip">업무 기반 해석</span></td><td>상태값 <span class="mono">draft</span> 추가 → 목록에 “임시” 배지</td></tr>
+          <tr><td>조회</td><td>거래 중단 거래처도 이력 조회는 가능해야 함</td><td><span class="chip">현행 시스템</span></td><td>삭제 = 비활성화 정책 → <span class="mono">status</span> (물리삭제 없음)</td></tr>
+          <tr><td>수정</td><td>단가 변경 시 변경 사유 입력을 강제</td><td><span class="chip">PM 제안</span></td><td>변경 이력 테이블 분리 → <span class="mono">price_log</span></td></tr>
+          <tr><td>공통</td><td>담당자 이관 시 과거 실적 귀속 기준</td><td><span class="chip attn">현업 확인</span></td><td>미결 D-12 — 고객 확정 전 개발 보류</td></tr>
+        </table>
+        <div class="legend">출처 태그로 <span class="chip">현업 요청</span> 원본 요구 · <span class="chip">업무 기반 해석</span> 업무 맥락 기반 PM 해석 · <span class="chip">현행 시스템</span> 기존 제약 · <span class="chip">PM 제안</span> 능동 제안 · <span class="chip attn">현업 확인</span> 미결 → 확정 전까지 개발 보류</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">02 · 결정로그</span>회의 20회를 이기는 문서</h2>
+      <p class="sec-desc">회의록은 시간순으로 두고, 결정만 메뉴(IA) 단위로 누적하는 별도 로그를 운영했습니다. 명세를 쓸 때 과거 회의록을 다시 뒤질 필요가 없어집니다.</p>
+    </div>
+    <div class="judge fx"><b>WHY · 왜 이렇게 설계했나</b>같은 주제가 여러 회의에 걸쳐 뒤집히면, “최신 결정이 무엇인가”를 찾는 비용이 기획 속도를 잡아먹습니다. 회의록(시간축)과 결정로그(메뉴축)를 분리하면 이력과 현재 상태를 둘 다 잃지 않습니다 — 나중에 “왜 이렇게 됐지”는 회의록에서, 지금 뭘 만들지는 결정로그에서.</div>
+    <div class="sample fx">
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">메뉴별 결정로그 — 필터로 좁혀보세요</span><span class="label">재현 샘플</span></div>
+      <div class="sample-body">
+        <div class="filters" id="logFilters">
+          <button class="on" data-menu="all">전체</button>
+          <button data-menu="client">거래처 관리</button>
+          <button data-menu="settle">정산 관리</button>
+          <button data-menu="item">품목 관리</button>
+        </div>
+        <table id="logTable">
+          <tr><th style="width:104px">메뉴</th><th>결정</th><th style="width:96px">출처</th><th style="width:92px">상태</th></tr>
+          <tr data-menu="client"><td>거래처 관리</td><td>삭제는 비활성화로 처리, 물리삭제 금지 (정산·이력이 참조)</td><td class="mono">〔0512 외부〕</td><td><b class="b-fix">확정</b></td></tr>
+          <tr data-menu="client"><td>거래처 관리</td><td>임시 저장 도입 — 필수값 없이 저장, 목록에 배지 표시</td><td class="mono">〔0519 외부〕</td><td><b class="b-fix">확정</b></td></tr>
+          <tr data-menu="settle"><td>정산 관리</td><td>정산 단위: 거래처×품목×월 최소 단위로 적재 후 합산</td><td class="mono">〔0526 외부〕</td><td><b class="b-fix">확정</b></td></tr>
+          <tr data-menu="settle"><td>정산 관리</td><td>수수료 상한 적용 방식 — 구간별 차등 여부</td><td class="mono">〔0526 외부〕</td><td><b class="b-ask">미결 D-07</b></td></tr>
+          <tr data-menu="item"><td>품목 관리</td><td>코드 체계: 관리코드와 표준코드 1:N — 데이터 대조로 확정</td><td class="mono">〔0602 검증〕</td><td><b class="b-fix">확정</b></td></tr>
+          <tr data-menu="item"><td>품목 관리</td><td>단종 품목 노출: 검색 시 기본 제외, 토글로 포함</td><td class="mono">〔0609 내부〕</td><td><b class="b-ask">현업 확인</b></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="insight fx"><b>요구사항은 그 메뉴의 회의에서만 나오지 않습니다</b> — 예컨대 거래처 화면의 핵심 요구가 정산 논의 중에 튀어나오는 식입니다. 그래서 메뉴별 문서를 쓸 때는 해당 회의만 보지 않고, <b>전체 회의 기록에서 그 주제를 교차 스윕</b>해 다른 맥락에서 나온 언급까지 수집한 뒤 작성했습니다. 결정로그가 메뉴축인 이유도 이 흩어진 결정들을 한 곳에 모으기 위해서입니다.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">03 · 파라미터 표</span>“빈칸이면 개발이 알아서 채운다”</h2>
+      <p class="sec-desc">동작을 좌우하는 기준값·임계치·기한을 표로 못 박아, <b>우리가 정할 수 있는 것</b>과 <b>고객만 아는 것</b>을 구분했습니다. 고복잡 정산 도메인의 모호성을 개발 착수 전에 제거합니다.</p>
+    </div>
+    <div class="judge fx"><b>WHY · 왜 이렇게 설계했나</b>“나중에 정하죠”가 쌓이면 개발 착수 시점에 값이 없어 개발자가 임의로 채웁니다. 파라미터를 표로 성격까지 붙여 두면 — 설계 확정(화면·동작 규칙: PM이 자신 있게 정함)은 즉시 닫고, 현업 확인(실제 마감일·업계 기준값: 고객만 아는 사실)은 기본값을 임시 가정으로 두어 “이 값으로 만들었는데 맞나요?”라고 역제안합니다. 결정이 안 나도 개발이 멈추지 않습니다.</div>
+    <div class="sample fx">
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">정산 도메인 파라미터 표</span><span class="label">재현 샘플</span></div>
+      <div class="sample-body">
+        <table>
+          <tr><th>항목</th><th style="width:130px">기본값 (제안)</th><th style="width:104px">성격</th><th>근거 · 처리</th></tr>
+          <tr><td>자료 제출 마감일</td><td>익월 15일</td><td><span class="b-ask">현업 확인</span></td><td>임시 가정 — 실제 업무 마감 확인 후 확정, 미결 D-07 연결</td></tr>
+          <tr><td>미제출 → 재요청 전환</td><td>마감 +7일</td><td><span class="b-fix">설계 확정</span></td><td>상태 3단계(수집중→지연→재요청) 화면 동작 규칙</td></tr>
+          <tr><td>이상값 판정 임계</td><td>전월 대비 ±20%</td><td><span class="b-ask">현업 확인</span></td><td>업계 변동 폭은 고객만 앎 — 역제안 후 조정</td></tr>
+          <tr><td>확정 후 수정 권한</td><td>관리자만</td><td><span class="b-fix">설계 확정</span></td><td>확정 = 게이트. 하위 데이터 참조 무결성 보호</td></tr>
+        </table>
+      </div>
+    </div>
+    <h3 class="fx">AS-IS → TO-BE 흐름 재설계</h3>
+    <div class="flow fx">
+      <svg viewBox="0 0 840 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AS-IS 수작업 흐름과 TO-BE 상태 모델 흐름 비교" style="width:100%;height:auto;font-family:Pretendard,sans-serif;">
+        <text x="0" y="18" font-size="13" font-weight="700" fill="#77777E">AS-IS · 담당자 기억에 의존</text>
+        <g font-size="12.5" fill="#1A1A1F">
+          <rect x="0" y="30" width="150" height="40" rx="8" fill="#EDEDF0" stroke="#DEDEE3"/><text x="75" y="55" text-anchor="middle">자료 수기 취합</text>
+          <rect x="190" y="30" width="150" height="40" rx="8" fill="#EDEDF0" stroke="#DEDEE3"/><text x="265" y="55" text-anchor="middle">엑셀 수작업 대조</text>
+          <rect x="380" y="30" width="150" height="40" rx="8" fill="#EDEDF0" stroke="#DEDEE3"/><text x="455" y="55" text-anchor="middle">누락 발견 지연</text>
+          <rect x="570" y="30" width="160" height="40" rx="8" fill="#F1E8D3" stroke="#D8C79B"/><text x="650" y="55" text-anchor="middle" fill="#7A5E2A">정산 오류·재작업</text>
+        </g>
+        <g stroke="#B4B4BA" stroke-width="1.5" marker-end="url(#a)">
+          <line x1="150" y1="50" x2="186" y2="50"/><line x1="340" y1="50" x2="376" y2="50"/><line x1="530" y1="50" x2="566" y2="50"/>
+        </g>
+        <text x="0" y="118" font-size="13" font-weight="700" fill="#1A1A1F">TO-BE · 상태 모델이 흐름을 통제</text>
+        <g font-size="12.5" fill="#1A1A1F">
+          <rect x="0" y="130" width="150" height="40" rx="8" fill="#fff" stroke="#1A1A1F" stroke-width="1.4"/><text x="75" y="155" text-anchor="middle">업로드 → 임시 테이블</text>
+          <rect x="190" y="130" width="150" height="40" rx="8" fill="#fff" stroke="#1A1A1F" stroke-width="1.4"/><text x="265" y="155" text-anchor="middle">자동 검증·정제</text>
+          <rect x="380" y="130" width="150" height="40" rx="8" fill="#fff" stroke="#1A1A1F" stroke-width="1.4"/><text x="455" y="155" text-anchor="middle">누락 자동 판정·재요청</text>
+          <rect x="570" y="130" width="160" height="40" rx="8" fill="#E4E4E8" stroke="#1A1A1F" stroke-width="1.4"/><text x="650" y="155" text-anchor="middle">확정 = 게이트 통과</text>
+        </g>
+        <g stroke="#1A1A1F" stroke-width="1.5" marker-end="url(#b)">
+          <line x1="150" y1="150" x2="186" y2="150"/><line x1="340" y1="150" x2="376" y2="150"/><line x1="530" y1="150" x2="566" y2="150"/>
+        </g>
+        <defs>
+          <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#B4B4BA" stroke-width="1.5"/></marker>
+          <marker id="b" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#1A1A1F" stroke-width="1.5"/></marker>
+        </defs>
+      </svg>
+    </div>
+    <div class="insight fx"><b>핸드오프는 화면이 아니라 상태 모델이었습니다</b> — 데이터가 어떤 상태(임시→검증→확정)를 거쳐 어디로 흐르는지를 먼저 정의하면, 화면·권한·예외 처리 규칙이 그 위에서 자연스럽게 결정됩니다.</div>
+  </div>
+</section>
+
+<div class="wrap next-nav">
+  <a href="index.html">← 홈</a>
+  <a href="case-ai.html">다음: AI 업무 시스템 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
+    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btns=document.querySelectorAll('#logFilters button');
+    var rows=document.querySelectorAll('#logTable tr[data-menu]');
+    btns.forEach(function(b){
+      b.addEventListener('click',function(){
+        btns.forEach(function(x){x.classList.remove('on');});
+        b.classList.add('on');
+        var m=b.getAttribute('data-menu');
+        rows.forEach(function(r){r.style.display=(m==='all'||r.getAttribute('data-menu')===m)?'':'none';});
+      });
+    });
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+    document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
+  })();
+</script>
+
+</body>
+</html>

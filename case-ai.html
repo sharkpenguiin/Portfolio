@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 업무 시스템 구축 — 반복을 시스템으로 · 조명호</title>
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="AI 업무 시스템 구축 — 반복 업무를 사람이 아니라 시스템이 기억하게">
+<meta property="og:description" content="커스텀 AI 스킬 10종, SSOT 슬랙 Q&A 봇, STT 커스텀 사전, 5대 검증 기준 — AI 산출물을 근거 기반으로 통제한 업무 시스템.">
+<meta name="description" content="반복 업무를 커스텀 AI 스킬로 시스템화하고, AI 산출물은 근거 기반 검증 기준으로 통제한 기록.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
+    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
+    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-tx:#46654F;
+    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+  .fx.in{opacity:1;transform:none;}
+
+  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
+  .nav-logo a{color:inherit;}
+  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
+  .nav-links{display:flex;gap:20px;font-size:13px;flex-wrap:wrap;}
+  .nav-links a{color:var(--sub);transition:color .15s;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);font-weight:700;}
+  .nav-links span.soon{color:#B4B4BA;cursor:default;}
+
+  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
+  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
+  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
+  .meta-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+  .mchip{font-size:13px;background:var(--paper);border:1px solid var(--line);padding:6px 13px;border-radius:99px;color:var(--sub);}
+  .lead{color:var(--sub);max-width:720px;margin-top:26px;font-size:16.5px;}
+
+  section{padding:72px 0;}
+  section.tint{background:var(--tint);}
+  .sec-head{margin-bottom:30px;}
+  h2{font-size:27px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
+  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
+  .sec-desc{color:var(--sub);max-width:700px;}
+  h3{font-size:18px;font-weight:800;margin:30px 0 12px;}
+
+  .card-surface{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh-sm);}
+  .flowbox{padding:26px 24px;margin-top:8px;}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  th{background:var(--tint);font-weight:700;text-align:left;}
+  th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;color:var(--ink);white-space:nowrap;background:var(--tint);padding:1px 6px;border-radius:5px;}
+  .tbl-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--line);}
+  .tbl-wrap table th,.tbl-wrap table td{border-left:none;border-right:none;}
+  .lifecycle{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px;font-size:13.5px;color:var(--sub);}
+  .lifecycle b{background:var(--paper);border:1px solid var(--line2);border-radius:8px;padding:5px 12px;color:var(--ink);font-weight:700;}
+  .lifecycle span{color:#B4B4BA;}
+
+  /* representative skill anatomy */
+  .anat{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--paper);box-shadow:var(--sh-sm);}
+  .anat > div{padding:22px;border-right:1px solid var(--line);}
+  .anat > div:last-child{border-right:none;}
+  .anat .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:10px;}
+  .anat b{display:block;font-size:15px;margin-bottom:8px;}
+  .anat p{font-size:13.5px;color:var(--sub);}
+
+  /* minicase highlight (Hermes) */
+  .minicase{background:var(--ink);color:#F3F3F5;border-radius:22px;padding:40px 38px;margin-top:8px;}
+  .minicase .tag{font-size:11px;font-weight:800;letter-spacing:.14em;background:rgba(255,255,255,.12);color:#fff;padding:6px 14px;border-radius:99px;display:inline-block;margin-bottom:18px;}
+  .minicase h3{color:#fff;font-size:24px;margin:0 0 10px;}
+  .minicase .mc-sub{color:#B9B9C0;font-size:15px;max-width:640px;margin-bottom:28px;}
+  .mc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:8px;}
+  .mc-step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 20px;}
+  .mc-step .n{font-size:11px;font-weight:800;letter-spacing:.1em;color:#9A9AA2;margin-bottom:10px;}
+  .mc-step b{display:block;color:#fff;font-size:15.5px;margin-bottom:8px;}
+  .mc-step p{color:#B9B9C0;font-size:13.5px;}
+
+  /* chat mockup */
+  .chat{background:var(--paper);border-radius:16px;overflow:hidden;box-shadow:var(--sh);border:1px solid var(--line);margin:24px 0 6px;}
+  .chrome{background:#F1F1F3;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+  .chrome .dots{display:flex;gap:6px;}
+  .chrome .dots i{width:11px;height:11px;border-radius:50%;display:block;}
+  .chrome .dots i:nth-child(1){background:#FF5F57;}
+  .chrome .dots i:nth-child(2){background:#FEBC2E;}
+  .chrome .dots i:nth-child(3){background:#28C840;}
+  .chrome .title{font-size:12.5px;color:var(--sub);}
+  .chrome .label{font-size:11.5px;font-weight:700;color:var(--amber-tx);background:var(--amber-bg);padding:3px 10px;border-radius:99px;margin-left:auto;}
+  .chat-body{padding:22px;display:flex;flex-direction:column;gap:14px;}
+  .msg{max-width:80%;font-size:14px;line-height:1.6;}
+  .msg.u{align-self:flex-end;background:var(--ink);color:#fff;border-radius:14px 14px 3px 14px;padding:11px 16px;}
+  .msg.b{align-self:flex-start;background:var(--tint);border:1px solid var(--line);border-radius:14px 14px 14px 3px;padding:13px 16px;}
+  .msg.b .src{display:block;margin-top:8px;font-size:12px;color:var(--sub);border-top:1px dashed var(--line2);padding-top:8px;}
+  .msg.b .flag{color:var(--amber-tx);font-weight:700;}
+
+  /* verify loop */
+  .loop{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:18px 0 4px;}
+  .loop .lp{flex:1;min-width:180px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--sh-sm);}
+  .loop .lp .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:8px;}
+  .loop .lp b{font-size:15px;display:block;margin-bottom:5px;}
+  .loop .lp p{font-size:13px;color:var(--sub);}
+
+  /* before/after STT */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .ba .col{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--sh-sm);}
+  .ba .col .k{font-size:11.5px;font-weight:800;letter-spacing:.08em;margin-bottom:14px;}
+  .ba .before .k{color:var(--amber-tx);}
+  .ba .after .k{color:var(--green-tx);}
+  .ba .row{font-size:13.5px;padding:8px 0;border-bottom:1px dashed var(--line2);}
+  .ba .row:last-child{border-bottom:none;}
+  .ba .mis{color:var(--amber-tx);font-weight:700;}
+  .ba .fix{color:var(--green-tx);font-weight:700;}
+
+  /* verify cards */
+  .vgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px;}
+  .vcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 18px;box-shadow:var(--sh-sm);}
+  .vcard .n{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:12px;}
+  .vcard b{display:block;font-size:15px;margin-bottom:8px;letter-spacing:-.01em;}
+  .vcard p{font-size:12.5px;color:var(--sub);line-height:1.55;}
+  .judge{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:14px;padding:22px 26px;box-shadow:var(--sh-sm);margin:24px 0;font-size:14.5px;line-height:1.72;}
+  .judge b{display:flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.08em;margin-bottom:10px;}
+  .steps-inline{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:13.5px;}
+  .steps-inline b{background:var(--tint);border-radius:8px;padding:6px 12px;font-weight:700;}
+  .steps-inline span{color:#B4B4BA;}
+
+  /* memory layers */
+  .mem{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+  .layer{display:flex;gap:16px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;box-shadow:var(--sh-sm);}
+  .layer .lv{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--sub);min-width:96px;padding-top:2px;}
+  .layer b{display:block;font-size:15.5px;margin-bottom:4px;}
+  .layer p{font-size:13.5px;color:var(--sub);}
+  .mem-extra{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
+  .mem-extra .pill{background:var(--paper);border:1px solid var(--line2);border-radius:12px;padding:14px 18px;font-size:13.5px;flex:1;min-width:220px;}
+  .mem-extra .pill b{display:block;margin-bottom:4px;}
+
+  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:24px;line-height:1.72;}
+  .insight b{color:var(--ink);}
+  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
+  .next-nav .muted{color:#B4B4BA;}
+  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+
+  @media(max-width:760px){
+    h1{font-size:28px;}
+    .anat{grid-template-columns:1fr;}
+    .anat > div{border-right:none;border-bottom:1px solid var(--line);}
+    .mc-steps{grid-template-columns:1fr;}
+    .ba{grid-template-columns:1fr;}
+    .vgrid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
+    <div class="nav-links">
+      <a href="index.html">홈</a>
+      <a href="case-erp.html">B2B ERP</a>
+      <a href="case-ai.html" class="active">AI 시스템</a>
+      <a href="case-proto.html">프로토타입</a>
+      <a href="case-public.html">공공·플랫폼</a>
+      <a href="making.html">Making of</a>
+      <a href="about.html">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">CASE 02 · AI 업무 시스템 구축 · 차별화 핵심</span>
+    <h1>반복 업무를 사람이 아니라<br>시스템이 기억하게</h1>
+    <div class="meta-chips">
+      <span class="mchip">커스텀 AI 스킬 10종</span><span class="mchip">SSOT 슬랙 Q&amp;A 봇</span><span class="mchip">STT 커스텀 사전</span><span class="mchip">5대 검증 기준</span><span class="mchip">3계층 메모리 운영</span>
+    </div>
+    <p class="lead">AI를 “빠르게 대신 써주는 도구”가 아니라 <b>설계 대상</b>으로 다뤘습니다. 반복되는 산출물 작업은 커스텀 스킬로 시스템화하고, AI가 만든 결과물은 근거 기반 검증 기준으로 통제합니다. 아래는 그 시스템을 구성 요소별로 재현한 기록입니다. <em style="font-style:normal;color:var(--amber-tx)">모든 예시는 비밀유지를 위해 일반화·익명화한 샘플입니다.</em></p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">개요</span>소스가 검증된 산출물이 되기까지</h2>
+      <p class="sec-desc">녹취·회의 같은 원본 소스가 신뢰할 수 있는 산출물이 되는 전 과정을, 사람이 판단하는 지점을 명시해 하나의 파이프라인으로 운영했습니다.</p>
+    </div>
+    <div class="card-surface flowbox fx">
+      <svg viewBox="0 0 960 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI 업무 시스템 워크플로우" style="width:100%;height:auto;font-family:Pretendard,sans-serif;">
+        <g font-size="12.5" fill="#1A1A1F" text-anchor="middle">
+          <rect x="0" y="34" width="130" height="46" rx="10" fill="#EDEDF0" stroke="#DEDEE3"/><text x="65" y="55">소스</text><text x="65" y="72" font-size="11" fill="#77777E">녹취·회의·자료</text>
+          <rect x="166" y="34" width="130" height="46" rx="10" fill="#fff" stroke="#1A1A1F" stroke-width="1.3"/><text x="231" y="55">STT 사전</text><text x="231" y="72" font-size="11" fill="#77777E">용어 정규화</text>
+          <rect x="332" y="34" width="130" height="46" rx="10" fill="#fff" stroke="#1A1A1F" stroke-width="1.3"/><text x="397" y="55">AI 스킬</text><text x="397" y="72" font-size="11" fill="#77777E">10종 구조화</text>
+          <rect x="498" y="34" width="130" height="46" rx="10" fill="#fff" stroke="#1A1A1F" stroke-width="1.3"/><text x="563" y="55">5대 검증</text><text x="563" y="72" font-size="11" fill="#77777E">사람이 검수</text>
+          <rect x="664" y="34" width="130" height="46" rx="10" fill="#E4E4E8" stroke="#1A1A1F" stroke-width="1.3"/><text x="729" y="55">산출물</text><text x="729" y="72" font-size="11" fill="#77777E">명세·핸드오프</text>
+          <rect x="830" y="34" width="130" height="46" rx="10" fill="#F1E8D3" stroke="#D8C79B"/><text x="895" y="55" fill="#7A5E2A">SSOT 봇</text><text x="895" y="72" font-size="11" fill="#7A5E2A">지식 재활용</text>
+        </g>
+        <g stroke="#1A1A1F" stroke-width="1.4" marker-end="url(#ar)">
+          <line x1="130" y1="57" x2="162" y2="57"/><line x1="296" y1="57" x2="328" y2="57"/><line x1="462" y1="57" x2="494" y2="57"/><line x1="628" y1="57" x2="660" y2="57"/><line x1="794" y1="57" x2="826" y2="57"/>
+        </g>
+        <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#1A1A1F" stroke-width="1.5"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">01 · 스킬</span>커스텀 AI 스킬 10종</h2>
+      <p class="sec-desc">매번 반복되던 PM 산출물 작업을 스킬로 만들었습니다. 각 스킬은 <b>입력 → 규칙 → 출력</b>이 고정돼 있어, 같은 소스면 같은 품질의 결과가 나옵니다. (스킬명·프로젝트 고유 규칙은 일반화)</p>
+    </div>
+    <div class="tbl-wrap fx">
+      <table>
+        <tr><th style="width:200px">스킬 (기능)</th><th>입력</th><th>출력</th></tr>
+        <tr><td>기능명세서 작성</td><td>회의록·고객 자료</td><td>화면 단위 명세 시트</td></tr>
+        <tr><td>명세서 검수</td><td>작성된 명세 + 원 소스</td><td>정합성·누락·서식 리포트</td></tr>
+        <tr><td>회의 사전 준비</td><td>이전 회의 결정 시드</td><td>아젠다·확인 질문 목록</td></tr>
+        <tr><td>회의 사후 정리</td><td>녹취·메모</td><td>확정·미결·변경·액션 분류</td></tr>
+        <tr><td>내부 미팅 정리</td><td>외부 결과 + 내부 논의</td><td>공유·결정 통합 페이지</td></tr>
+        <tr><td>리스크·미결 추출</td><td>기획서·회의록</td><td>놓친 항목·선결 결정 목록</td></tr>
+        <tr><td>고객 전달문 작성</td><td>진행 상황·요청 사항</td><td>전달 메일·요약·확인 요청</td></tr>
+        <tr><td>QA 체크리스트 생성</td><td>기능 기획·유저 스토리</td><td>테스트 케이스 목록</td></tr>
+        <tr><td>인터뷰 질문 가이드</td><td>새 도메인 개요</td><td>현황 파악 질문 세트</td></tr>
+        <tr><td>킥오프 준비 패키지</td><td>새 프로젝트 정보</td><td>초기 아젠다·질문·체크리스트</td></tr>
+      </table>
+    </div>
+    <h3 class="fx">대표 스킬 동작 구조 — 기능명세서 작성</h3>
+    <div class="anat fx">
+      <div><div class="k">INPUT</div><b>소스 문서</b><p>회의록·고객 전달 자료·미팅 텍스트. 소스 없이 임의로 내용을 만들지 않는 것이 첫 규칙입니다.</p></div>
+      <div><div class="k">RULES</div><b>고정 규칙</b><p>소스에 없는 내용 생성 금지 · 등록/수정 필드 대칭 · 필드 유형 일관성 · 출처 태그 부착.</p></div>
+      <div><div class="k">OUTPUT</div><b>명세 시트</b><p>화면 단위로 요구사항 → 정책 → 필드가 이어지는 구조화된 명세. 이후 검수 스킬로 다시 검증.</p></div>
+    </div>
+    <div class="lifecycle fx"><span>라이프사이클</span><b>원본 관리</b><span>→</span><b>패키징(.skill)</b><span>→</span><b>배포</b><span>→</span><b>버전 관리</b></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">02 · 하이라이트</span>SSOT 슬랙 Q&amp;A 봇</h2>
+      <p class="sec-desc">팀의 도메인 지식을 하나의 신뢰 소스(SSOT)로 구조화하고, 슬랙에서 질문에 답하는 봇으로 연결한 미니 프로젝트. <b>“봇을 만들었다”가 아니라 “지식 구조와 신뢰도 기준을 설계했다”</b>가 핵심입니다.</p>
+    </div>
+    <div class="minicase fx">
+      <span class="tag">MINI CASE · PM이 만든 작은 프로덕트</span>
+      <h3>지식을 사람(PM)이 아니라 시스템이 답하게</h3>
+      <p class="mc-sub">팀원의 도메인 질문이 전부 PM을 거쳐야 했습니다. PM이 병목이 되는 구조를, 지식을 SSOT로 구조화해 봇이 대신 답하도록 재설계했습니다.</p>
+      <div class="mc-steps">
+        <div class="mc-step"><div class="n">① 문제</div><b>PM = 병목</b><p>도메인 질문이 모두 PM 경유. 답이 사람의 기억과 가용 시간에 묶여 있었습니다.</p></div>
+        <div class="mc-step"><div class="n">② 설계</div><b>SSOT + 신뢰도 기준</b><p>지식을 단일 소스로 구조화 → 봇 연결 → 답변의 신뢰도를 통제하는 기준을 정의.</p></div>
+        <div class="mc-step"><div class="n">③ 운영 루프</div><b>질문 → 개선</b><p>실제 질문을 수집해 지식 소스와 답변 품질을 계속 보강하는 루프로 운영.</p></div>
+      </div>
+    </div>
+
+    <div class="chat fx">
+      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">#도메인-qa · 봇 응답 (가상 도메인)</span><span class="label">재현 샘플</span></div>
+      <div class="chat-body">
+        <div class="msg u">거래처 정산 자료 마감일이 언제인가요?</div>
+        <div class="msg b">익월 15일 기준입니다.<span class="src">출처: 정산 정책 회의(2026-05-26) · 파라미터 표 D-07 <span class="flag">— 단, 업계 변동 폭 기준값은 현업 확인 대기(미결)입니다.</span></span></div>
+        <div class="msg u">단종된 품목도 검색에 노출되나요?</div>
+        <div class="msg b">기본은 제외됩니다. 검색 화면의 ‘단종 포함’ 토글로만 노출됩니다.<span class="src">출처: 품목 관리 결정로그(0609 · 내부 확정)</span></div>
+      </div>
+    </div>
+
+    <div class="judge fx"><b>WHY · 신뢰도는 모델이 아니라 큐레이션에서 나온다</b>봇이 잘 답하는 이유는 똑똑한 모델이 아니라, <b>어떤 지식을 넣느냐</b>에 있습니다. 지식 소스는 Google Drive 문서·Notion·고객사 슬랙 Q&amp;A 채널에서 가져오되, 회의록을 다시 정제하고 <b>녹취·전달 자료·실제 질문답변 같은 1차 소스만</b> 지식으로 씁니다. 틀린 정보가 봇에 들어갈 경로 자체를 소스 단계에서 차단한 것입니다. 그리고 답을 모르거나 미결인 항목은 <b>“확인 대기”라고 정직하게 표시</b>하도록 설계했습니다.</div>
+
+    <h3 class="fx">정확도를 숫자 대신 검증 루프로 담보</h3>
+    <p class="sec-desc fx" style="margin-bottom:8px">별도 정답률 지표를 만들지 않았습니다. 대신 봇의 답이 실제로 맞는지를 업무 흐름 안에서 반복 검증했습니다.</p>
+    <div class="loop fx">
+      <div class="lp"><div class="k">STEP 1</div><b>실무에 사용</b><p>봇 답변을 실제 산출물 작성에 사용.</p></div>
+      <div class="lp"><div class="k">STEP 2</div><b>고객사 미팅에서 검증</b><p>그 산출물을 고객사 미팅에서 직접 확인.</p></div>
+      <div class="lp"><div class="k">STEP 3</div><b>반응·검수로 품질 확인</b><p>고객 반응과 직접 검수로 틀린 답을 잡아 소스에 반영.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">03 · STT</span>커스텀 사전으로 오인식 차단</h2>
+      <p class="sec-desc">회의 녹취를 자동 전사할 때 도메인 용어가 자주 오인식됐습니다. 용어 사전을 구축해 전사 단계에서 바로잡고, 근거 추적의 정확도를 높였습니다. (용어는 가상 예시로 익명화)</p>
+    </div>
+    <div class="ba fx">
+      <div class="col before">
+        <div class="k">BEFORE · 사전 없음</div>
+        <div class="row">“<span class="mis">전산</span> 마감일 기준으로…”</div>
+        <div class="row">“<span class="mis">스크린</span> 아이디로 매핑”</div>
+        <div class="row">“<span class="mis">단과</span> 품목은 제외”</div>
+      </div>
+      <div class="col after">
+        <div class="k">AFTER · 사전 적용</div>
+        <div class="row">“<span class="fix">정산</span> 마감일 기준으로…”</div>
+        <div class="row">“<span class="fix">SCR</span> 아이디로 매핑”</div>
+        <div class="row">“<span class="fix">단종</span> 품목은 제외”</div>
+      </div>
+    </div>
+    <div class="insight fx"><b>오인식 한 단어가 전사 전체의 근거를 무너뜨립니다</b> — 전사가 틀리면 그 위에 쌓인 회의록·결정·명세가 모두 잘못된 소스를 참조하게 됩니다. 사전은 파이프라인의 가장 앞단에서 이 오류를 막는 장치입니다.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">04 · 검증</span>AI 산출물 5대 검증 기준</h2>
+      <p class="sec-desc">AI가 만든 결과물을 그대로 쓰지 않기 위한 통제 장치입니다. 모든 산출물은 아래 5개 기준을 통과해야 합니다.</p>
+    </div>
+    <div class="vgrid fx">
+      <div class="vcard"><div class="n">01</div><b>근거 검증</b><p>모든 항목에 소스가 있는가 — 근거 없으면 AI가 지어낸 것으로 보고 제거.</p></div>
+      <div class="vcard"><div class="n">02</div><b>중복 제거</b><p>같은 로직·기능이 다른 이름으로 중복 생성되지 않았는가 — 통합하거나 삭제.</p></div>
+      <div class="vcard"><div class="n">03</div><b>자동/수동 경계</b><p>시스템이 자동 처리할 것과 사람이 판단할 것이 구분돼 있는가.</p></div>
+      <div class="vcard"><div class="n">04</div><b>실제 업무 동선</b><p>실제 사용자가 일하는 순서·방식과 맞는가 — 화면이 아니라 업무가 기준.</p></div>
+      <div class="vcard"><div class="n">05</div><b>데이터 정합</b><p>필드가 어디서 와서 어디로 연결되는가 — 출처와 흐름의 정합 확인.</p></div>
+    </div>
+    <div class="judge fx"><b>CASE · AI가 임의로 만든 기능을 근거 대조로 제거</b>명세 초안에 원 소스엔 없던 ‘자동 승인’ 옵션이 생성된 적이 있습니다. 회의록·요구 목록을 <b>역방향으로 대조</b>한 결과 근거가 없음을 확인하고 제거했습니다. 그럴듯해 보이는 AI 산출물일수록 “정말 소스에 있는가”를 되묻는 절차가 필요합니다.
+      <div class="steps-inline"><span>다단계 검수</span><b>변경분 정방향 확인</b><span>→</span><b>기존 문서 역방향 모순 스캔</b><span>→</span><b>무작위 샘플 소스 대조</b></div>
+    </div>
+    <div class="insight fx"><b>이 기준들은 이론이 아니라 실수의 기록입니다</b> — 한번은 키워드 검색만 믿고 소스를 정리하다, 데이터가 임시 → 검증 → 확정 상태를 거쳐 흐르는 구조를 통째로 놓친 적이 있습니다. 그 뒤로 “기능이 있느냐”만이 아니라 <b>“데이터가 어떤 상태를 거쳐 어디로 흐르는가”</b>를 점검 관점에 추가했습니다. 실수를 개인의 반성으로 끝내지 않고 팀의 규칙으로 바꾸는 것 — 검증 기준이 계속 자라는 방식입니다.</div>
+  </div>
+</section>
+
+<section class="tint">
+  <div class="wrap">
+    <div class="sec-head fx">
+      <h2><span class="num">05 · 운영</span>AI 협업을 시스템으로 지속</h2>
+      <p class="sec-desc">한 번의 대화로 끝나는 AI가 아니라, 세션이 바뀌어도 맥락이 이어지는 협업 체계를 운영합니다. 3계층 메모리 위에서 AI가 매번 같은 기준으로 일하게 만든 구조입니다.</p>
+    </div>
+    <div class="mem fx">
+      <div class="layer"><div class="lv">GLOBAL</div><div><b>전역 원칙</b><p>응답 원칙, 커넥터·스킬 환경, 업무 규칙 — 모든 세션에 공통 적용되는 층.</p></div></div>
+      <div class="layer"><div class="lv">PROJECT</div><div><b>프로젝트 레퍼런스</b><p>프로젝트별 결정·용어·구조. 새 세션이 시작돼도 이 층을 읽으면 맥락이 복원됩니다.</p></div></div>
+      <div class="layer"><div class="lv">SESSION</div><div><b>세션 로그</b><p>당일 작업 기록. 자동으로 상위 층에 반영·정리되어 지식이 휘발되지 않게.</p></div></div>
+    </div>
+    <div class="mem-extra fx">
+      <div class="pill"><b>일일 자동 보충</b>스케줄로 세션 기록을 매일 메모리에 정리·반영.</div>
+      <div class="pill"><b>작업 규칙 코드화</b>“어떻게 일할지”를 문서로 고정해 세션마다 재현.</div>
+    </div>
+    <div class="insight fx"><b>AI와의 협업을 세션 단위가 아니라 시스템으로 지속시키는 설계</b> — 대부분은 대화가 끝나면 맥락이 사라집니다. 메모리 계층을 두면 AI가 어제의 결정을 기억한 채로 오늘 일을 이어갑니다.</div>
+  </div>
+</section>
+
+<div class="wrap next-nav">
+  <a href="index.html">← 홈</a>
+  <a href="case-proto.html">다음: 프로토타입 데모 →</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
+    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
+  </div>
+</footer>
+
+<script>
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
+</script>
+
+</body>
+</html>
