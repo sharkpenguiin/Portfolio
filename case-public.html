@@ -1,200 +1,226 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>공공 SI · 플랫폼 — front-loading 원칙의 기원 · 조명호</title>
-<meta property="og:type" content="article">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>공공 SI — 검증하는 눈에서 기준을 세우는 손으로 · 조명호 (Kai)</title>
+<meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="공공 SI · 플랫폼 — front-loading 원칙과 AI 경계 설계의 기원">
-<meta property="og:description" content="대형 공공 정보화 사업 품질점검과 이커머스 광고 도메인 AI 검수 기준 설계 — 지금의 일하는 원칙이 만들어진 두 경험.">
-<meta name="description" content="공공 정보화 품질점검과 이커머스 광고 AI 검수 운영 기준 설계 — front-loading과 AI 경계 설계 원칙의 기원.">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="공공 SI — 검증하는 눈에서 기준을 세우는 손으로 · 조명호">
+<meta property="og:description" content="전국 7개 유역·39개소·8공정·256억 규모 국가 사업 품질점검과 기재부 디브레인 결산 개편 케이스.">
+<meta name="description" content="전국 7개 유역·39개소·8공정·256억 규모 국가 사업 품질점검과 기재부 디브레인 결산 개편 케이스.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root{
-    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
-    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
-    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-tx:#46654F;
-    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
-  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
-  .fx.in{opacity:1;transform:none;}
-
-  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
-  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
-  .nav-logo a{color:inherit;}
-  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
-  .nav-links{display:flex;gap:18px;font-size:13px;flex-wrap:wrap;}
-  .nav-links a{color:var(--sub);transition:color .15s;}
-  .nav-links a:hover{color:var(--ink);}
-  .nav-links a.active{color:var(--ink);font-weight:700;}
-
-  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
-  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
-  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
-  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
-  .lead{color:var(--sub);max-width:720px;margin-top:6px;font-size:16.5px;}
-
-  section{padding:64px 0;}
-  section.tint{background:var(--tint);}
-  .sec-head{margin-bottom:28px;}
-  h2{font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
-  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
-  .sec-desc{color:var(--sub);max-width:700px;}
-  h3{font-size:17px;font-weight:800;margin:24px 0 10px;}
-
-  .case{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:34px 34px;box-shadow:var(--sh-sm);}
-  .case + .case{margin-top:16px;}
-  .case .tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-  .case .tagrow .role{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--ink);background:var(--tint);border:1px solid var(--line2);padding:5px 12px;border-radius:99px;}
-  .case h3{margin-top:0;font-size:20px;}
-  .metrics{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0;}
-  .metric{flex:1;min-width:120px;background:var(--tint);border-radius:14px;padding:16px 18px;}
-  .metric b{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em;}
-  .metric span{font-size:12px;color:var(--sub);}
-  .case p{font-size:14.5px;color:var(--ink);margin-bottom:10px;}
-  .case .pt{display:flex;gap:10px;font-size:14px;padding:8px 0;border-top:1px dashed var(--line2);}
-  .case .pt .pk{color:var(--sub);font-weight:700;min-width:64px;}
-  .origin{background:var(--ink);color:#F3F3F5;border-radius:14px;padding:16px 20px;margin-top:18px;font-size:13.5px;}
-  .origin b{color:#fff;}
-
-  /* 요구사항 분해 바 차트 */
-  .reqchart{background:var(--tint);border-radius:14px;padding:20px 22px;margin-top:16px;}
-  .reqchart .rc-title{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:var(--sub);margin-bottom:14px;}
-  .bar{display:flex;align-items:center;gap:10px;font-size:12.5px;margin:7px 0;}
-  .bar .bl{min-width:104px;color:var(--sub);text-align:right;}
-  .bar .bt{height:13px;background:var(--ink);border-radius:4px;opacity:.85;}
-  .bar .bn{color:var(--sub);font-weight:700;}
-  .rc-note{font-size:12px;color:var(--sub);margin-top:12px;}
-
-  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:24px;line-height:1.72;}
-  .insight b{color:var(--ink);}
-  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
-  .next-nav .muted{color:#B4B4BA;}
-  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
-  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
-
-  @media(max-width:760px){ h1{font-size:28px;} .case{padding:26px 22px;} }
+body{word-break:keep-all;overflow-wrap:break-word}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard',-apple-system,sans-serif;color:#26262B;background:#F5F4F1;line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:#1A1A1F}
+.fx{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.fx.in{opacity:1;transform:none}
+.mono{font-family:ui-monospace,Menlo,monospace}
+.card{background:#fff;border:1px solid #EAE8E2;border-radius:20px;box-shadow:0 1px 2px rgba(40,38,32,.03),0 8px 30px rgba(40,38,32,.05)}
+nav a.navlink:hover{color:#26262B}
+@media(max-width:860px){.h1big{font-size:44px!important}.colrow{grid-template-columns:1fr!important}.statrow{flex-wrap:wrap}.statrow>div{flex:1 0 46%!important}.pad{padding-left:26px!important;padding-right:26px!important}.navlinks{gap:14px!important;font-size:12.5px!important}}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
-    <div class="nav-links">
-      <a href="index.html">홈</a>
-      <a href="case-erp.html">B2B ERP</a>
-      <a href="case-ai.html">AI 시스템</a>
-      <a href="case-proto.html">프로토타입</a>
-      <a href="case-public.html" class="active">공공·플랫폼</a>
-      <a href="samples.html">산출물 샘플</a>
-      <a href="making.html">Making of</a>
-      <a href="about.html">About</a>
-    </div>
-  </div>
+<div style="max-width:1140px;margin:0 auto;padding:0 24px">
+
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 12px;background:rgba(245,244,241,.82);backdrop-filter:blur(14px)">
+<span style="font:700 14px/1 'Pretendard';letter-spacing:-.01em">Joe Myeongho <span style="color:#9A968C;font-weight:500">· PM</span></span>
+<span class="navlinks" style="display:flex;gap:20px;font-size:13.5px;color:#8A867C;flex-wrap:wrap">
+<a class="navlink" href="index.html">홈</a>
+<a class="navlink" href="case-erp.html">B2B ERP</a>
+<a class="navlink" href="case-ai.html">AI 시스템</a>
+<a class="navlink" href="case-proto.html">프로토타입</a>
+<a class="navlink" href="case-public.html" style="color:#26262B;font-weight:600">공공 SI</a>
+<a class="navlink" href="case-ads.html">AI 검수</a>
+<a class="navlink" href="samples.html">산출물 샘플</a>
+<a class="navlink" href="making.html">Making of</a>
+<a class="navlink" href="about.html">About</a>
+</span>
 </nav>
 
-<div class="hero">
-  <div class="wrap">
-    <span class="eyebrow">CASE 04 · 공공 SI · 플랫폼</span>
-    <h1>지금의 원칙이<br>만들어진 두 경험</h1>
-    <p class="lead">세 개의 보조 케이스입니다. 대형 공공 정보화 사업의 <b>품질점검</b>에서 “앞단에서 리스크를 잡는다(front-loading)”를, 전 중앙부처가 쓰는 <b>국가재정시스템 개편</b>에서 “요구사항은 추적 가능한 자산”이라는 감각을, 이커머스 광고 도메인의 <b>AI 검수 기준 설계</b>에서 “AI가 어디까지 판단하게 둘 것인가”를 배웠습니다. <em style="font-style:normal;color:var(--amber-tx)">조직·수치는 공개 이력서 수준으로만 표기하고, 세부는 익명화했습니다.</em></p>
-  </div>
+<header style="padding:52px 12px 8px">
+<a href="index.html" class="mono" style="display:inline-flex;align-items:center;gap:8px;font:600 12px/1 ui-monospace;color:#8A867C;margin-bottom:34px">← 홈으로</a>
+<div class="mono" style="display:flex;gap:10px;align-items:center;font:600 11.5px/1 ui-monospace;letter-spacing:.14em;color:#B8825A;margin-bottom:24px"><span style="width:6px;height:6px;border-radius:50%;background:#C08149"></span>CASE 04 · 공공 SI</div>
+<h1 class="h1big" style="font:650 60px/1.08 'Pretendard';letter-spacing:-.035em;margin:0 0 24px;max-width:900px">검증하는 눈에서<br><span style="color:#C08149">기준</span>을 세우는 손으로</h1>
+<p style="max-width:640px;font-size:17.5px;line-height:1.78;color:#615D53;margin:0 0 36px">256억 규모 국가 사업 품질점검에서 "무엇을 신뢰할지" 판단하는 눈을 키웠고, 기재부 결산 개편에서 요구사항을 ID로 추적하는 체계를 만들었습니다.<br>front-loading 원칙의 출발점입니다.</p>
+<div class="card statrow" style="display:flex;overflow:hidden">
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">256억</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">사업 규모</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">39개소</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">전국 7유역 점검</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">72건</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">요구사항 관리</span></div>
+<div style="flex:1;padding:24px 26px;background:#26262B"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#F5F4F1">RTM</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#A19D93;margin-top:8px">기재부 요구 추적표</span></div>
 </div>
+</header>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">A · 공공 SI</span>대형 공공 정보화 사업 품질점검</h2>
-      <p class="sec-desc">요구사항과 산출물이 계획대로 이행되는지를 앞단에서 점검하는 역할. 문제를 개발이 끝난 뒤가 아니라 <b>착수 전에</b> 발견하는 감각이 여기서 만들어졌습니다.</p>
-    </div>
-    <div class="case fx">
-      <div class="tagrow"><span class="role">역할 · 품질점검</span></div>
-      <div class="metrics">
-        <div class="metric"><b>256억</b><span>사업 규모</span></div>
-        <div class="metric"><b>39개소</b><span>대상 현장</span></div>
-        <div class="metric"><b>72건</b><span>점검 요구사항</span></div>
-        <div class="metric"><b>8개</b><span>품질 공정</span></div>
-      </div>
-      <div class="pt"><span class="pk">문제</span><span>대규모·다현장 사업에서 요구사항 누락이나 산출물 불일치가 후반에 발견되면 되돌리는 비용이 큼.</span></div>
-      <div class="pt"><span class="pk">방식</span><span>요구사항·산출물을 공정별 점검 항목으로 구조화하고, 개발 단계 전·중에 정합성을 확인.</span></div>
-      <div class="pt"><span class="pk">배움</span><span>“뒤에서 고치는 것보다 앞에서 막는 게 싸다” — 이후 모든 기획에서 front-loading을 기본값으로.</span></div>
-      <div class="reqchart">
-        <div class="rc-title">요구사항 72건 → 유형별 분해 → 공정별 점검 항목으로 구조화 (공식 품질점검계획서 기준 재구성)</div>
-        <div class="bar"><span class="bl">기능</span><span class="bt" style="width:47%"></span><span class="bn">34</span></div>
-        <div class="bar"><span class="bl">프로젝트 관리</span><span class="bt" style="width:10%"></span><span class="bn">7</span></div>
-        <div class="bar"><span class="bl">데이터</span><span class="bt" style="width:8.5%"></span><span class="bn">6</span></div>
-        <div class="bar"><span class="bl">보안</span><span class="bt" style="width:8.5%"></span><span class="bn">6</span></div>
-        <div class="bar"><span class="bl">시스템 장비</span><span class="bt" style="width:7%"></span><span class="bn">5</span></div>
-        <div class="bar"><span class="bl">품질</span><span class="bt" style="width:5.5%"></span><span class="bn">4</span></div>
-        <div class="bar"><span class="bl">테스트</span><span class="bt" style="width:4.2%"></span><span class="bn">3</span></div>
-        <div class="bar"><span class="bl">성능</span><span class="bt" style="width:2.8%"></span><span class="bn">2</span></div>
-        <div class="bar"><span class="bl">기타</span><span class="bt" style="width:7%"></span><span class="bn">5</span></div>
-        <div class="rc-note">요구사항을 유형별로 분해하면 “어떤 리스크를 어느 공정에서 점검해야 하는지”가 정해집니다 — 기능 요구가 몰린 곳에 점검도 몰아야 누락이 잡힙니다. (기타 = 제약·프로젝트 지원·컨설팅)</div>
-      </div>
-      <div class="origin"><b>→ front-loading 원칙의 기원.</b> B2B ERP 케이스의 파라미터 표·미결 관리도 결국 “앞단에서 애매함을 없앤다”는 같은 원칙의 확장입니다.</div>
-    </div>
-  </div>
-</section>
-
-<section class="tint">
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">B · 공공 SI</span>전 중앙부처 국가재정시스템 — 결산 개편</h2>
-      <p class="sec-desc">전 중앙부처 공무원이 사용하는 결산·회계 시스템의 개편 사업. 요구사항이 목록으로만 존재하면 무엇이 반영됐는지 아무도 답할 수 없다는 것을 여기서 배웠습니다.</p>
-    </div>
-    <div class="case fx">
-      <div class="tagrow"><span class="role">역할 · 요구사항 관리 · 검증 구조 개선</span></div>
-      <div class="pt"><span class="pk">문제</span><span>전 부처가 쓰는 시스템에서 결산 데이터 입력·검증 오류가 반복. RFP의 요구사항과 실제 산출물 사이의 연결이 끊기면, 누락이 검수 단계에서야 발견됨.</span></div>
-      <div class="pt"><span class="pk">방식</span><span>요구사항마다 ID를 부여해 RFP ↔ 산출물을 매핑하고, 실제 결산 담당자의 업무 흐름(입력 → 검증 → 수정)을 기준으로 검증 포인트를 기획 초기에 재정의.</span></div>
-      <div class="pt"><span class="pk">배움</span><span>“요구사항은 나열하는 목록이 아니라 추적 가능한 자산” — 어떤 요구가 어디에 반영됐는지를 시스템이 답할 수 있어야 함.</span></div>
-      <div class="origin"><b>→ 요구사항 추적 체계의 기원.</b> B2B ERP 케이스의 결정로그·SCR-ID·출처 태그는 이 감각이 기획 문서 전체로 확장된 형태입니다.</div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">C · 플랫폼</span>이커머스 광고 도메인 AI 검수 기준 설계</h2>
-      <p class="sec-desc">AI 검수 도구를 운영하며 그 한계를 분석하고, <b>무엇을 AI에 맡기고 무엇을 사람이 판단할지</b>의 운영 기준을 설계했습니다. AI 경계 설계 서사의 시작점입니다.</p>
-    </div>
-    <div class="case fx">
-      <div class="tagrow"><span class="role">역할 · 검수 운영 기준 설계</span></div>
-      <div class="pt"><span class="pk">문제</span><span>AI 검수 도구는 빠르지만, 경계 케이스에서 오판이 발생. 도구를 그대로 신뢰하면 품질·정책 리스크로 이어짐.</span></div>
-      <div class="pt"><span class="pk">방식</span><span>AI가 자신 있게 판단하는 영역과 사람이 다시 봐야 하는 영역을 나누고, 그 경계를 운영 기준으로 문서화.</span></div>
-      <div class="pt"><span class="pk">배움</span><span>AI는 “대체”가 아니라 “경계를 설계해서 쓰는 것” — AI를 통제하는 판단 기준의 원형.</span></div>
-      <div class="origin"><b>→ AI 경계 설계 서사의 시작점.</b> AI 시스템 케이스의 5대 검증 기준·SSOT 봇 신뢰도 설계가 이 감각의 발전형입니다.</div>
-    </div>
-    <div class="insight fx"><b>세 경험은 지금 하나의 원칙으로 이어집니다</b> — 리스크는 앞단에서 잡고(front-loading), 요구사항은 추적 가능하게 만들고, AI는 경계를 설계해서 통제한다. 대표 케이스들은 이 원칙이 실제로 적용된 결과물입니다.</div>
-  </div>
-</section>
-
-<div class="wrap next-nav">
-  <a href="case-proto.html">← 프로토타입</a>
-  <a href="making.html">다음: Making of →</a>
+<section class="pad" style="padding:56px 12px 0">
+<div class="fx card" style="padding:30px 32px">
+<div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#B8825A;margin-bottom:14px">QUALITY CYCLE · 주간·월간 반복</div>
+<b style="display:block;font:650 19px/1.4 'Pretendard';margin-bottom:18px">품질점검 프로세스 — 실제 운영 사이클</b>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" class="colrow">
+<div style="background:#FAF9F6;border:1px solid #EAE8E2;border-radius:12px;padding:18px 18px"><div class="mono" style="font:600 10.5px/1 ui-monospace;color:#B8825A;margin-bottom:8px">01 기준</div><b style="display:block;font:650 15px/1.4 'Pretendard';margin-bottom:5px">점검 기준 합의</b><p style="font-size:12.5px;color:#615D53">품질점검계획서 기반 — 통과/보류 기준을 문서로 먼저</p></div>
+<div style="background:#FAF9F6;border:1px solid #EAE8E2;border-radius:12px;padding:18px 18px"><div class="mono" style="font:600 10.5px/1 ui-monospace;color:#B8825A;margin-bottom:8px">02 점검</div><b style="display:block;font:650 15px/1.4 'Pretendard';margin-bottom:5px">주간·월간 점검</b><p style="font-size:12.5px;color:#615D53">요구사항 72건·단계별 산출물을 유형별로 대조</p></div>
+<div style="background:#FAF9F6;border:1px solid #EAE8E2;border-radius:12px;padding:18px 18px"><div class="mono" style="font:600 10.5px/1 ui-monospace;color:#B8825A;margin-bottom:8px">03 보고</div><b style="display:block;font:650 15px/1.4 'Pretendard';margin-bottom:5px">점검보고서 작성</b><p style="font-size:12.5px;color:#615D53">발주기관 대상 주간·월간 보고를 직접 작성·보고</p></div>
+<div style="background:#FAF9F6;border:1px solid #EAE8E2;border-radius:12px;padding:18px 18px"><div class="mono" style="font:600 10.5px/1 ui-monospace;color:#B8825A;margin-bottom:8px">04 조치</div><b style="display:block;font:650 15px/1.4 'Pretendard';margin-bottom:5px">지적사항 추적</b><p style="font-size:12.5px;color:#615D53">누락·상충은 개발 착수 전에 조치 확인까지 추적</p></div>
 </div>
+</div>
+</section>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
-    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
-  </div>
+<section class="pad" style="padding:20px 12px 0">
+<div class="fx card" style="padding:30px 32px">
+<div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#B8825A;margin-bottom:12px">REAL ARTIFACT · 품질점검계획서 검수 기준표 원문 발췌</div>
+<b style="display:block;font:650 18px/1.4 'Pretendard';margin-bottom:14px">착수·계획 단계 점검항목 — 실제 사용 기준표</b>
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font:400 13px/1.6 'Pretendard';color:#3F3C35;min-width:560px">
+<tr style="background:#FAF9F6"><th style="text-align:left;padding:9px 12px;border:1px solid #EAE8E2;font-weight:650;white-space:nowrap">관리체계</th><th style="text-align:left;padding:9px 12px;border:1px solid #EAE8E2;font-weight:650">점검항목</th></tr>
+<tr><td style="padding:9px 12px;border:1px solid #EAE8E2;white-space:nowrap">범위 관리</td><td style="padding:9px 12px;border:1px solid #EAE8E2">사업수행계획서가 RFP·제안서·계약서와 일관성을 유지하고, 변경사항이 고객과 합의되었는가</td></tr>
+<tr><td style="padding:9px 12px;border:1px solid #EAE8E2;white-space:nowrap">범위 관리</td><td style="padding:9px 12px;border:1px solid #EAE8E2">WBS가 소요자원·비용·일정 산정이 가능한 수준으로 구체적으로 식별되었는가</td></tr>
+<tr><td style="padding:9px 12px;border:1px solid #EAE8E2;white-space:nowrap">변경 관리</td><td style="padding:9px 12px;border:1px solid #EAE8E2">변경관리 절차가 정립되었는가 — 일정·비용·자원·품질 파급효과 분석, 변경 이력관리</td></tr>
+<tr><td style="padding:9px 12px;border:1px solid #EAE8E2;white-space:nowrap">일정 관리</td><td style="padding:9px 12px;border:1px solid #EAE8E2">일정계획이 실행·관리 가능한 수준인가 — 활동 누락 여부, 활동 간 의존관계</td></tr>
+<tr><td style="padding:9px 12px;border:1px solid #EAE8E2;white-space:nowrap">위험 관리</td><td style="padding:9px 12px;border:1px solid #EAE8E2">위험 식별기준·관리 절차·대응방안 수립과 보고/승인 체계가 갖춰졌는가</td></tr>
+</table></div>
+<p style="font-size:13px;color:#8A867C;margin-top:14px">실제 품질점검계획서에서 발췌한 점검항목입니다.<br>이 기준표로 주간·월간 점검을 돌리고 점검보고서를 직접 작성했습니다 — WBS·변경 이력·의존관계를 보는 눈이 여기서 만들어졌습니다.</p>
+</div>
+</section>
+
+<section class="pad" style="padding:80px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">두 개의 국가 사업</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">CONTEXT · 01</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="card" style="padding:32px 30px">
+<div class="mono" style="font:600 11px/1 ui-monospace;color:#B8825A;letter-spacing:.06em;margin-bottom:14px">수자원 · 정수장 AI 자율운영</div>
+<b style="display:block;font:650 20px/1.3 'Pretendard';margin-bottom:10px">국가 사업 품질점검 (PM)</b>
+<p style="font-size:14.5px;color:#615D53">전국 7개 유역·정수장 39개소·정수처리 8개 공정 대상 256억 규모 사업. 산출물·요구사항이 기준을 충족하는지 점검하며 "근거 없이는 통과시키지 않는다"를 몸에 익힌 시기.</p>
+</div>
+<div class="card" style="padding:32px 30px">
+<div class="mono" style="font:600 11px/1 ui-monospace;color:#B8825A;letter-spacing:.06em;margin-bottom:14px">기재부 · 디브레인 결산 개편</div>
+<b style="display:block;font:650 20px/1.3 'Pretendard';margin-bottom:10px">전 중앙부처 결산 시스템 (PM)</b>
+<p style="font-size:14.5px;color:#615D53">전 중앙부처를 대상으로 한 결산 개편 사업. RFP 요구를 ID로 추적하는 RTM을 운영하고, 각 부처 결산 공무원이 참여한 UT를 직접 운영했습니다.</p>
+</div>
+</div>
+</section>
+
+<!-- 수자원 규모 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">수자원 국가사업 규모</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">SCALE · 02</p>
+</div>
+<div class="fx card statrow" style="display:flex;overflow:hidden;margin-bottom:16px">
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">7</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">전국 유역</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">39</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">점검 개소</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">8</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">정수처리 공정</span></div>
+<div style="flex:1;padding:24px 26px;background:#26262B"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#F5F4F1">256억</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#A19D93;margin-top:8px">사업 규모</span></div>
+</div>
+<div class="fx card" style="padding:30px 32px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:22px"><b style="font:650 18px/1.3 'Pretendard'">요구사항 72건 유형별 분해</b><span class="mono" style="font:500 11px/1 ui-monospace;color:#A19D93">실제 산출물 기반 재현본 · 비식별화</span></div>
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">기능</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:100%;height:100%;background:#C08149;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">34</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">PM</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:20.6%;height:100%;background:#D19A63;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">7</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">데이터</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:17.6%;height:100%;background:#D19A63;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">6</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">보안</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:17.6%;height:100%;background:#D19A63;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">6</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">장비</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:14.7%;height:100%;background:#DDAE7E;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">5</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">품질</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:11.8%;height:100%;background:#DDAE7E;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">4</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">테스트</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:8.8%;height:100%;background:#E4C29C;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">3</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">성능</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:5.9%;height:100%;background:#E4C29C;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">2</b></div>
+<div style="display:flex;align-items:center;gap:14px"><span style="width:64px;font:500 13px/1 'Pretendard';color:#4A463E">기타</span><div style="flex:1;height:22px;background:#F0EEE8;border-radius:6px;overflow:hidden"><div style="width:14.7%;height:100%;background:#DDAE7E;border-radius:6px"></div></div><b style="width:28px;text-align:right;font:700 13px/1 'Pretendard'">5</b></div>
+</div>
+<div style="margin-top:18px;padding-top:16px;border-top:1px solid #F0EEE8;font:500 13px/1 'Pretendard';color:#8A867C">합계 <b style="color:#26262B">72건</b> · 유형별로 분해해 누락을 구조적으로 방지</div>
+</div>
+</section>
+
+<!-- 성과 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">성과</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">RESULT · 03</p>
+<p style="color:#8A867C;font-size:15px;width:100%">모든 수치는 출처를 병기합니다.</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><b style="font:700 34px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">40%↓</b><p style="font-size:14px;color:#615D53;margin-top:12px">경보 대응 시간 <span style="color:#8A867C">(로그·피드백 기준)</span></p></div>
+<div class="card" style="padding:30px 28px"><b style="font:700 34px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">50%↓</b><p style="font-size:14px;color:#615D53;margin-top:12px">재논의·재작업 <span style="color:#8A867C">(로그·피드백 기준)</span></p></div>
+<div class="card" style="padding:30px 28px"><b style="font:700 34px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">40%↓</b><p style="font-size:14px;color:#615D53;margin-top:12px">기재부 재논의 <span style="color:#8A867C">(로그·피드백 기준)</span></p></div>
+</div>
+</section>
+
+<!-- 실제로 한 일 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">실제로 한 일</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">SCOPE · 04</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+<div class="card" style="padding:28px 30px"><b style="display:block;font:650 17px/1.3 'Pretendard';margin-bottom:8px">주간·월간 품질점검</b><p style="font-size:14px;color:#615D53">산출물이 점검 기준표를 충족하는지 대조하고, 판정 근거를 보고서에 남겼습니다.</p></div>
+<div class="card" style="padding:28px 30px"><b style="display:block;font:650 17px/1.3 'Pretendard';margin-bottom:8px">현장 데이터 취합·분석</b><p style="font-size:14px;color:#615D53">지역 PMO가 보내온 현장 데이터에서 이상 신호를 먼저 찾아냈습니다.</p></div>
+<div class="card" style="padding:28px 30px"><b style="display:block;font:650 17px/1.3 'Pretendard';margin-bottom:8px">발주기관 보고</b><p style="font-size:14px;color:#615D53">점검 결과와 리스크를 발주기관 눈높이로 정리해 보고했습니다.</p></div>
+<div class="card" style="padding:28px 30px"><b style="display:block;font:650 17px/1.3 'Pretendard';margin-bottom:8px">기재부 UT 직접 운영</b><p style="font-size:14px;color:#615D53">결산 공무원의 실제 입력 동선을 관찰해 입력·검증 구조 개선에 반영했습니다.</p></div>
+</div>
+</section>
+
+<!-- RTM -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx card" style="padding:40px 40px;background:#26262B;border:none">
+<div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.1em;color:#C79A6E;margin-bottom:16px">RTM · 기재부 RFP-ID 매핑</div>
+<h2 style="font:650 26px/1.35 'Pretendard';letter-spacing:-.02em;color:#F5F4F1;margin-bottom:14px">결정로그·SCR-ID의 기원</h2>
+<p style="font-size:16px;line-height:1.8;color:#A19D93;max-width:640px">기재부 사업에서 RFP의 각 요구에 ID를 부여하고 산출물과 매핑한 요구사항 추적표(RTM)를 운영했습니다. "모든 결과를 ID로 연결한다"는 이 경험이 이후 B2B ERP의 <b style="color:#F5F4F1">SCR-ID</b>와 <b style="color:#F5F4F1">결정로그</b>로 이어졌습니다.</p>
+</div>
+</section>
+
+<!-- 판단 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">판단</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">JUDGMENT · 05</p>
+</div>
+<p style="color:#8A867C;font-size:15px;margin-bottom:28px">문제를 뒤로 미루지 않고 앞단에서 기준으로 막는 법을 배웠습니다.</p>
+<div class="fx" style="display:flex;flex-direction:column;gap:14px">
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">01</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">기준을 먼저, 판정은 그다음</b><p style="font-size:14.5px;color:#615D53">주관적 검수를 없애기 위해 통과/보류 기준을 문서로 먼저 합의한 뒤 점검을 시작.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">02</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">누락은 개발 착수 전에</b><p style="font-size:14.5px;color:#615D53">요구사항 72건을 유형별로 분해하고 RTM으로 산출물과 매핑해, 빠진 요구·상충을 개발이 시작되기 전에 걸러냈습니다.</p></div>
+</div>
+</div>
+</section>
+
+<!-- 이어진 것 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">이어진 것</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">LEGACY · 06</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><b style="font:650 18px/1.3 'Pretendard';color:#C08149">근거주의</b><p style="font-size:14px;color:#615D53;margin-top:12px">소스 없는 내용은 쓰지 않는다 → ERP 결정로그로 계승</p></div>
+<a href="case-ads.html" class="card" style="padding:30px 28px;display:block"><b style="font:650 18px/1.3 'Pretendard';color:#C08149">경계 설계</b><p style="font-size:14px;color:#615D53;margin-top:12px">AI/사람 역할 분리 → 이커머스 AI 검수 기준으로 발전 <span style="color:#B8825A">보기 →</span></p></a>
+<div class="card" style="padding:30px 28px"><b style="font:650 18px/1.3 'Pretendard';color:#C08149">front-loading</b><p style="font-size:14px;color:#615D53;margin-top:12px">문제를 앞단에서 막는다 → 전 케이스를 관통하는 원칙</p></div>
+</div>
+</section>
+
+<section class="pad" style="padding:72px 12px 0">
+<a href="case-ads.html" class="fx card" style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:30px 32px;background:#26262B;border:none">
+<div><div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#A19D93;margin-bottom:10px">다음 케이스 · CASE 05</div><b style="font:650 22px/1.3 'Pretendard';color:#F5F4F1">AI 검수 운영 기준 설계</b></div>
+<span class="mono" style="font:600 14px/1 ui-monospace;color:#E4B583;white-space:nowrap">보기 →</span>
+</a>
+</section>
+
+<footer class="pad" style="padding:56px 12px 56px;border-top:1px solid #EAE8E2;margin-top:56px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8A867C">
+<span style="flex-basis:100%;order:-1;font-size:12px;color:#A19D93">본 사이트의 데모·표·샘플은 실제 산출물 기반 재현본이며, 고객사·사내 정보는 비식별화했습니다.</span>
+<span>© 2026 조명호 (Kai) · <a href="resume.pdf" target="_blank" rel="noopener" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">이력서 보기</a></span>
+<a href="mailto:wag8574@gmail.com" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">wag8574@gmail.com</a>
 </footer>
 
-<script>
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
-  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
-</script>
+</div>
 
+<script>document.addEventListener("DOMContentLoaded",function(){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+    document.querySelectorAll('.fx').forEach(el=>io.observe(el));
+});</script>
 </body>
 </html>

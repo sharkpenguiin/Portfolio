@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 검수 운영 기준 설계 · 조명호 (Kai)</title>
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:title" content="AI 검수 운영 기준 설계 · 조명호">
+<meta property="og:description" content="이커머스 광고 도메인에서 AI 자동화와 사람 판단의 경계를 설계 — 판단 편차 30~40%↓. 5대 검증 기준의 기원.">
+<meta name="description" content="이커머스 광고 도메인에서 AI 자동화와 사람 판단의 경계를 설계 — 판단 편차 30~40%↓. 5대 검증 기준의 기원.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+body{word-break:keep-all;overflow-wrap:break-word}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard',-apple-system,sans-serif;color:#26262B;background:#F5F4F1;line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:#1A1A1F}
+.fx{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.fx.in{opacity:1;transform:none}
+.mono{font-family:ui-monospace,Menlo,monospace}
+.card{background:#fff;border:1px solid #EAE8E2;border-radius:20px;box-shadow:0 1px 2px rgba(40,38,32,.03),0 8px 30px rgba(40,38,32,.05)}
+.who{display:inline-block;font:700 12px/1 'Pretendard';padding:6px 12px;border-radius:99px;white-space:nowrap}
+.who.ai{background:#26262B;color:#F5F4F1}
+.who.op{background:#F4EBE1;color:#8A5E38}
+.who.mix{background:#EEEBE4;color:#55524A;border:1px solid #E1DFD8}
+nav a.navlink:hover{color:#26262B}
+@media(max-width:860px){.h1big{font-size:44px!important}.colrow{grid-template-columns:1fr!important}.statrow{flex-wrap:wrap}.statrow>div{flex:1 0 46%!important}.pad{padding-left:26px!important;padding-right:26px!important}.navlinks{gap:14px!important;font-size:12.5px!important}}
+</style>
+</head>
+<body>
+
+<div style="max-width:1140px;margin:0 auto;padding:0 24px">
+
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 12px;background:rgba(245,244,241,.82);backdrop-filter:blur(14px)">
+<span style="font:700 14px/1 'Pretendard';letter-spacing:-.01em">Joe Myeongho <span style="color:#9A968C;font-weight:500">· PM</span></span>
+<span class="navlinks" style="display:flex;gap:20px;font-size:13.5px;color:#8A867C;flex-wrap:wrap">
+<a class="navlink" href="index.html">홈</a>
+<a class="navlink" href="case-erp.html">B2B ERP</a>
+<a class="navlink" href="case-ai.html">AI 시스템</a>
+<a class="navlink" href="case-proto.html">프로토타입</a>
+<a class="navlink" href="case-public.html">공공 SI</a>
+<a class="navlink" href="case-ads.html" style="color:#26262B;font-weight:600">AI 검수</a>
+<a class="navlink" href="samples.html">산출물 샘플</a>
+<a class="navlink" href="making.html">Making of</a>
+<a class="navlink" href="about.html">About</a>
+</span>
+</nav>
+
+<header style="padding:52px 12px 8px">
+<a href="index.html" class="mono" style="display:inline-flex;align-items:center;gap:8px;font:600 12px/1 ui-monospace;color:#8A867C;margin-bottom:34px">← 홈으로</a>
+<div class="mono" style="display:flex;gap:10px;align-items:center;font:600 11.5px/1 ui-monospace;letter-spacing:.14em;color:#B8825A;margin-bottom:24px"><span style="width:6px;height:6px;border-radius:50%;background:#C08149"></span>CASE 05 · AI 검수 <span style="color:#26262B;background:#E4B583;border-radius:99px;padding:5px 11px;letter-spacing:.06em">5대 검증 기준의 기원</span></div>
+<h1 class="h1big" style="font:650 60px/1.08 'Pretendard';letter-spacing:-.035em;margin:0 0 24px;max-width:900px">AI를 <span style="color:#C08149">통제</span>하는<br>판단 기준을 설계하다</h1>
+<p style="max-width:640px;font-size:17.5px;line-height:1.78;color:#615D53;margin:0 0 36px">이커머스 광고 플랫폼에서 AI 검수 도구를 운영하며, 무엇을 AI에 맡기고 무엇을 사람이 판단할지의 경계를 검수 유형별로 정의했습니다.<br>AI 산출물을 그대로 쓰지 않는 판단 기준 — 이후 5대 검증 기준으로 이어진 첫 경험입니다.</p>
+<div class="card statrow" style="display:flex;overflow:hidden">
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">5유형</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">검수 경계 매트릭스</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">2종</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">기준·교육 자료화 → 온보딩 정착</span></div>
+<div style="flex:1;padding:24px 26px;background:#26262B"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#F5F4F1">30~40%↓</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#A19D93;margin-top:8px">운영자 간 판단 편차</span></div>
+</div>
+</header>
+
+<!-- 문제 -->
+<section class="pad" style="padding:80px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">문제</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">PROBLEM · 01</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">AI 검수는 오탐·미탐이 섞인다</b><p style="font-size:14.5px;color:#615D53">도구가 정상 광고를 걸러내거나(오탐) 위반을 놓쳐(미탐), 결과를 그대로 신뢰할 수 없었습니다.</p></div>
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">사람마다 판정이 달랐다</b><p style="font-size:14.5px;color:#615D53">같은 광고도 운영자에 따라 통과/반려가 갈려, 결과를 예측할 수 없었습니다.</p></div>
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">기준이 사람 머릿속에만 있었다</b><p style="font-size:14.5px;color:#615D53">"이건 왜 반려됐나"의 근거가 문서화돼 있지 않아, 신규 인원마다 기준을 다시 익혀야 했습니다.</p></div>
+</div>
+</section>
+
+<!-- 판단 · 경계 매트릭스 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">AI 검수 경계 매트릭스</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">JUDGMENT · 02</p>
+<p style="color:#8A867C;font-size:15px;width:100%">"AI가 자신 있게 판단하는 영역"과 "사람이 다시 봐야 하는 영역"을 검수 유형별로 나눴습니다 (실제 산출물 기반 재현본 · 고객사/사내 정보 비식별화).</p>
+</div>
+<div class="fx card" style="padding:8px 8px;overflow:hidden">
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font:400 14px/1.6 'Pretendard';color:#3F3C35;min-width:600px">
+<tr style="background:#FAF9F6">
+<th style="text-align:left;padding:14px 16px;border-bottom:1px solid #EAE8E2;font-weight:650;width:190px">검수 유형</th>
+<th style="text-align:left;padding:14px 16px;border-bottom:1px solid #EAE8E2;font-weight:650;width:150px">1차 처리</th>
+<th style="text-align:left;padding:14px 16px;border-bottom:1px solid #EAE8E2;font-weight:650">경계 기준 · 사람이 다시 보는 이유</th>
+</tr>
+<tr><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">명백한 정책 위반<br><span style="color:#8A867C;font-size:12.5px">(금지 표현·자산)</span></td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8"><span class="who ai">AI 자동 반려</span></td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">규칙이 명확해 오탐 리스크가 낮음 — 사람은 이의제기 건만 확인.</td></tr>
+<tr><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">표현 수위·맥락 애매</td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8"><span class="who op">운영자 판단</span></td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">같은 문구도 업종·타깃·매체에 따라 위반 여부가 갈림 — AI 신뢰도가 낮은 구간.</td></tr>
+<tr><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">신규·예외 정책 적용</td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8"><span class="who op">운영자 판단</span></td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">학습 데이터에 없는 케이스 — 기준 자체를 사람이 먼저 정의해야 함.</td></tr>
+<tr><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">반복 정형 유형</td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8"><span class="who mix">AI 자동 + 샘플 감사</span></td><td style="padding:14px 16px;border-bottom:1px solid #F0EEE8">양은 많지만 규칙화 가능 — 주기적 표본 검증으로 드리프트를 잡음.</td></tr>
+<tr><td style="padding:14px 16px">이의제기·재심</td><td style="padding:14px 16px"><span class="who op">운영자 판단</span></td><td style="padding:14px 16px">정책 해석과 최종 책임은 사람의 영역.</td></tr>
+</table></div>
+</div>
+<div class="fx card" style="padding:26px 30px;margin-top:16px;background:#26262B;border:none">
+<div class="mono" style="font:600 10.5px/1 ui-monospace;letter-spacing:.08em;color:#C79A6E;margin-bottom:12px">설계 원칙</div>
+<p style="font-size:15.5px;line-height:1.8;color:#A19D93">"AI가 자신 있게 판단하는 영역"과 "사람이 다시 봐야 하는 영역"을 나누고, 그 경계를 운영 기준으로 문서화했습니다. <b style="color:#F5F4F1">이 경계 설계가 이후 모든 검증 기준의 출발점</b>입니다.</p>
+</div>
+</section>
+
+<!-- 기준 수립·온보딩 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">기준을 자산으로</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">SYSTEM · 03</p>
+</div>
+<div class="fx" style="display:flex;flex-direction:column;gap:14px">
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">01</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">오탐·미탐 사례를 분석해 기준 수립</b><p style="font-size:14.5px;color:#615D53">도구가 틀린 케이스와 정책 판단 사례를 모아, 유형별로 "AI가 맡을 것 / 사람이 볼 것"의 경계를 명문화했습니다.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">02</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">기준·사례를 교육 자료로 온보딩에 정착</b><p style="font-size:14.5px;color:#615D53">판정 기준과 경계 케이스를 교육 자료로 만들어 신규 운영자 온보딩에 적용 — 기준이 사람 머릿속이 아니라 문서에 남게 했습니다.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">03</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">피드백·로그로 기준을 계속 보완</b><p style="font-size:14.5px;color:#615D53">반복 유형은 주간 회의로 정례화하고, 피드백·로그를 지속 분석해 기준을 갱신하며 장기 일관성을 유지했습니다.</p></div>
+</div>
+</div>
+</section>
+
+<!-- 성과 -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">성과</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">RESULT · 04</p>
+<p style="color:#8A867C;font-size:15px;width:100%">수치는 출처를 병기합니다.</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px">
+<div class="card" style="padding:32px 30px"><b style="font:700 40px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">30~40%↓</b><p style="font-size:14.5px;color:#615D53;margin-top:14px">운영자 간 판단 편차 <span style="color:#8A867C">(팀 피드백 기준 — 기준·사례 교육 자료화 + 온보딩 정착 후)</span></p></div>
+<div class="card" style="padding:32px 30px"><b style="font:700 26px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">일관</b><p style="font-size:14px;color:#615D53;margin-top:12px">사람이 바뀌어도 같은 기준으로 판정</p></div>
+<div class="card" style="padding:32px 30px"><b style="font:700 26px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">속도</b><p style="font-size:14px;color:#615D53;margin-top:12px">명백 위반은 AI 자동 처리, 경계만 사람이</p></div>
+</div>
+</section>
+
+<!-- 5대 검증 기준의 기원 연결 -->
+<section class="pad" style="padding:72px 12px 0">
+<a href="case-ai.html" class="fx card" style="display:block;padding:40px 40px;background:#26262B;border:none">
+<div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.1em;color:#C79A6E;margin-bottom:16px">LEGACY · 05</div>
+<h2 style="font:650 26px/1.35 'Pretendard';letter-spacing:-.02em;color:#F5F4F1;margin-bottom:14px">5대 검증 기준의 기원</h2>
+<p style="font-size:16px;line-height:1.8;color:#A19D93;max-width:640px">여기서 만든 "AI가 판단할 것과 사람이 볼 것을 나눈다"는 원칙이, 이후 B2B ERP에서 AI 산출물을 통제하는 <b style="color:#F5F4F1">5대 검증 기준</b>(근거 검증·중복 제거·자동/수동 경계·실제 업무 동선·데이터 정합)으로 발전했습니다. <span style="color:#E4B583">AI 시스템 케이스에서 보기 →</span></p>
+</a>
+</section>
+
+<section class="pad" style="padding:72px 12px 0">
+<a href="samples.html" class="fx card" style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:30px 32px;background:#F4EBE1;border-color:#E4DDD1">
+<div><div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#B8825A;margin-bottom:10px">이어서 보기</div><b style="font:650 22px/1.3 'Pretendard'">산출물 샘플 — 실물로 확인하기</b></div>
+<span class="mono" style="font:600 14px/1 ui-monospace;color:#C08149;white-space:nowrap">보기 →</span>
+</a>
+</section>
+
+<footer class="pad" style="padding:56px 12px 56px;border-top:1px solid #EAE8E2;margin-top:56px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8A867C">
+<span style="flex-basis:100%;order:-1;font-size:12px;color:#A19D93">본 사이트의 데모·표·샘플은 실제 산출물 기반 재현본이며, 고객사·사내 정보는 비식별화했습니다.</span>
+<span>© 2026 조명호 (Kai) · <a href="resume.pdf" target="_blank" rel="noopener" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">이력서 보기</a></span>
+<a href="mailto:wag8574@gmail.com" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">wag8574@gmail.com</a>
+</footer>
+
+</div>
+
+<script>document.addEventListener("DOMContentLoaded",function(){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+    document.querySelectorAll('.fx').forEach(el=>io.observe(el));
+});</script>
+</body>
+</html>

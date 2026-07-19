@@ -1,190 +1,218 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — 조명호 · Judgment-driven · AI-native PM</title>
-<meta property="og:type" content="profile">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · 조명호 (Kai)</title>
+<meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="About — 조명호 · Judgment-driven · AI-native PM">
-<meta property="og:description" content="공공 SI 품질점검에서 B2B ERP End-to-End 오너십까지. AI를 통제하는 판단 기준을 설계하는 PM.">
-<meta name="description" content="조명호 — Judgment-driven · AI-native PM. 일하는 철학, 성장 서사, 도구, 학습.">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="About · 조명호 (Kai)">
+<meta property="og:description" content="근거로 판단하고 시스템으로 반복을 없애는 PM. 커리어·강점·스킬·연락처.">
+<meta name="description" content="근거로 판단하고 시스템으로 반복을 없애는 PM. 커리어·강점·스킬·연락처.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root{
-    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
-    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
-    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
-  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
-  .fx.in{opacity:1;transform:none;}
-
-  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
-  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
-  .nav-logo a{color:inherit;}
-  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
-  .nav-links{display:flex;gap:18px;font-size:13px;flex-wrap:wrap;}
-  .nav-links a{color:var(--sub);transition:color .15s;}
-  .nav-links a:hover{color:var(--ink);}
-  .nav-links a.active{color:var(--ink);font-weight:700;}
-
-  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
-  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
-  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
-  h1{font-size:38px;font-weight:800;line-height:1.25;margin-bottom:20px;letter-spacing:-.02em;}
-  h1 em{font-style:normal;color:var(--sub);}
-  .lead{color:var(--sub);max-width:720px;font-size:16.5px;}
-
-  section{padding:60px 0;}
-  section.tint{background:var(--tint);}
-  .sec-head{margin-bottom:26px;}
-  h2{font-size:24px;font-weight:800;margin-bottom:10px;letter-spacing:-.01em;}
-  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
-  .sec-desc{color:var(--sub);max-width:700px;}
-
-  .phil{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .pc{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:28px 26px;box-shadow:var(--sh-sm);}
-  .pc .n{font-size:12px;font-weight:800;color:var(--sub);margin-bottom:14px;}
-  .pc b{display:block;font-size:17px;margin-bottom:10px;letter-spacing:-.01em;}
-  .pc p{font-size:13.5px;color:var(--sub);}
-
-  /* timeline */
-  .tl{position:relative;margin-top:8px;padding-left:22px;}
-  .tl::before{content:"";position:absolute;left:4px;top:6px;bottom:6px;width:2px;background:var(--line2);}
-  .tl .item{position:relative;padding:14px 0 14px 20px;}
-  .tl .item::before{content:"";position:absolute;left:-22px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--ink);border:2px solid var(--bg);}
-  .tl .ph{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--sub);margin-bottom:4px;}
-  .tl b{font-size:16px;display:block;margin-bottom:4px;}
-  .tl p{font-size:14px;color:var(--sub);}
-
-  .kv{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .kv .box{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;box-shadow:var(--sh-sm);}
-  .kv .box h3{font-size:13px;font-weight:800;color:var(--sub);letter-spacing:.06em;margin-bottom:14px;}
-  .tags{display:flex;flex-wrap:wrap;gap:8px;}
-  .tags span{font-size:13px;background:var(--tint);border:1px solid var(--line2);border-radius:99px;padding:6px 13px;}
-  .learn{font-size:14px;color:var(--ink);}
-  .learn .st{font-size:11px;font-weight:800;color:var(--amber-tx,#7A5E2A);background:#F1E8D3;border-radius:99px;padding:2px 9px;margin-left:6px;}
-
-  .contact{background:var(--ink);color:#F3F3F5;border-radius:20px;padding:40px 38px;text-align:center;}
-  .contact h2{color:#fff;margin-bottom:10px;}
-  .contact p{color:#B9B9C0;font-size:15px;margin-bottom:22px;}
-  .contact .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-  .contact a{background:#F3F3F5;color:var(--ink);padding:13px 26px;border-radius:12px;font-weight:700;font-size:14.5px;}
-  .contact a.ghost{background:transparent;color:#F3F3F5;border:1px solid rgba(255,255,255,.28);}
-
-  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
-  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
-
-  @media(max-width:760px){ h1{font-size:28px;} .phil{grid-template-columns:1fr;} .kv{grid-template-columns:1fr;} }
+body{word-break:keep-all;overflow-wrap:break-word}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard',-apple-system,sans-serif;color:#26262B;background:#F5F4F1;line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:#1A1A1F}
+.fx{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.fx.in{opacity:1;transform:none}
+.mono{font-family:ui-monospace,Menlo,monospace}
+.card{background:#fff;border:1px solid #EAE8E2;border-radius:20px;box-shadow:0 1px 2px rgba(40,38,32,.03),0 8px 30px rgba(40,38,32,.05)}
+nav a.navlink:hover{color:#26262B}
+@media(max-width:860px){.h1big{font-size:44px!important}.colrow{grid-template-columns:1fr!important}.introrow{grid-template-columns:1fr!important}.pad{padding-left:26px!important;padding-right:26px!important}.navlinks{gap:14px!important;font-size:12.5px!important}}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
-    <div class="nav-links">
-      <a href="index.html">홈</a>
-      <a href="case-erp.html">B2B ERP</a>
-      <a href="case-ai.html">AI 시스템</a>
-      <a href="case-proto.html">프로토타입</a>
-      <a href="case-public.html">공공·플랫폼</a>
-      <a href="samples.html">산출물 샘플</a>
-      <a href="making.html">Making of</a>
-      <a href="about.html" class="active">About</a>
-    </div>
-  </div>
+<div style="max-width:1140px;margin:0 auto;padding:0 24px">
+
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 12px;background:rgba(245,244,241,.82);backdrop-filter:blur(14px)">
+<span style="font:700 14px/1 'Pretendard';letter-spacing:-.01em">Joe Myeongho <span style="color:#9A968C;font-weight:500">· PM</span></span>
+<span class="navlinks" style="display:flex;gap:20px;font-size:13.5px;color:#8A867C;flex-wrap:wrap">
+<a class="navlink" href="index.html">홈</a>
+<a class="navlink" href="case-erp.html">B2B ERP</a>
+<a class="navlink" href="case-ai.html">AI 시스템</a>
+<a class="navlink" href="case-proto.html">프로토타입</a>
+<a class="navlink" href="case-public.html">공공 SI</a>
+<a class="navlink" href="case-ads.html">AI 검수</a>
+<a class="navlink" href="samples.html">산출물 샘플</a>
+<a class="navlink" href="making.html">Making of</a>
+<a class="navlink" href="about.html" style="color:#26262B;font-weight:600">About</a>
+</span>
 </nav>
 
-<div class="hero">
-  <div class="wrap">
-    <span class="eyebrow">ABOUT</span>
-    <h1>조명호 <em>(Kai)</em><br>Judgment-driven · AI-native PM</h1>
-    <p class="lead">공공 SI 품질점검에서 시작해, 이커머스 광고 플랫폼 운영을 거쳐, B2B ERP를 요구 정의부터 개발 핸드오프까지 단독으로 이끌었습니다. 일관된 관심은 하나입니다 — <b>AI를 통제하는 판단 기준을 설계하는 것.</b></p>
-  </div>
+<!-- HERO / INTRO -->
+<header style="padding:52px 12px 0">
+<a href="index.html" class="mono" style="display:inline-flex;align-items:center;gap:8px;font:600 12px/1 ui-monospace;color:#8A867C;margin-bottom:34px">← 홈으로</a>
+<div class="mono" style="display:flex;gap:10px;align-items:center;font:600 11.5px/1 ui-monospace;letter-spacing:.14em;color:#B8825A;margin-bottom:24px"><span style="width:6px;height:6px;border-radius:50%;background:#C08149"></span>ABOUT</div>
+<div class="introrow" style="display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:start">
+<div>
+<h1 class="h1big" style="font:650 56px/1.1 'Pretendard';letter-spacing:-.035em;margin:0 0 24px">속도는 AI에게,<br>판단은 <span style="color:#C08149">기준</span>으로.</h1>
+<p style="font-size:17.5px;line-height:1.8;color:#615D53;margin:0 0 18px">안녕하세요, PM 조명호(Kai)입니다. 공공 SI 품질점검에서 <b style="color:#26262B">근거로 판단하는 눈</b>을, 플랫폼에서 <b style="color:#26262B">AI와 사람의 경계를 설계하는 감각</b>을, B2B ERP에서 <b style="color:#26262B">요구 정의부터 개발 핸드오프까지 오너십</b>을 쌓았습니다.</p>
+<p style="font-size:17.5px;line-height:1.8;color:#615D53;margin:0">AI로 일의 속도를 만들되, 무엇을 신뢰할지는 반드시 근거 기반 기준으로 정합니다. 반복 업무는 사람이 아니라 시스템으로 처리하는 것을 좋아합니다.</p>
 </div>
+<div class="card" style="padding:0;overflow:hidden">
+<div style="width:100%;height:180px;background:#26262B;display:flex;align-items:center;justify-content:center"><img src="profile.png" alt="조명호 프로필 사진" style="width:132px;height:132px;border-radius:50%;object-fit:cover;border:3px solid #F5F4F1"></div>
+<div style="padding:22px 24px">
+<b style="display:block;font:650 17px/1.3 'Pretendard';margin-bottom:2px">조명호 <span style="color:#8A867C;font-weight:500">Kai</span></b>
+<p class="mono" style="font:500 12px/1.6 ui-monospace;color:#8A867C">Judgment-driven · AI-native PM</p>
+<div style="display:flex;gap:8px;margin-top:16px">
+<a href="resume.pdf" target="_blank" rel="noopener" style="flex:1;text-align:center;background:#26262B;color:#fff;padding:11px 0;border-radius:10px;font:600 13px/1 'Pretendard'">이력서</a>
+<a href="mailto:wag8574@gmail.com" style="flex:1;text-align:center;background:#fff;color:#26262B;border:1px solid #E1DFD8;padding:11px 0;border-radius:10px;font:600 13px/1 'Pretendard'">메일</a>
+</div>
+</div>
+</div>
+</div>
+</header>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">PHILOSOPHY</span>일하는 철학</h2>
-      <p class="sec-desc">이 세 가지가 모든 케이스와 이 사이트를 관통합니다.</p>
-    </div>
-    <div class="phil fx">
-      <div class="pc"><div class="n">01</div><b>AI는 설계 대상</b><p>AI에 판단을 넘기지 않습니다. 무엇을 맡기고 무엇을 사람이 결정할지 경계를 먼저 설계하고, 산출물은 검증 기준으로 통제합니다.</p></div>
-      <div class="pc"><div class="n">02</div><b>반복은 시스템으로</b><p>같은 문제가 반복되면 사람의 부지런함이 아니라 템플릿·규칙·로그 체계가 기억하게 만듭니다.</p></div>
-      <div class="pc"><div class="n">03</div><b>판단과 책임은 PM</b><p>도구는 판단을 돕지, 대신하지 않습니다. 최종 결정과 그에 대한 책임은 사람이 집니다.</p></div>
-    </div>
-  </div>
+<!-- STRENGTHS -->
+<section class="pad" style="padding:88px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:32px">
+<h2 style="font:650 33px/1.2 'Pretendard';letter-spacing:-.025em">강점</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">STRENGTHS · 01</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:32px 28px">
+<div style="width:44px;height:44px;border-radius:12px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+<b style="display:block;font:650 19px/1.35 'Pretendard';margin-bottom:10px">근거 기반 판단</b>
+<p style="font-size:14.5px;color:#615D53">모든 결정에 출처와 근거를 남겨, 번복 논의에서도 즉시 소명합니다.</p>
+</div>
+<div class="card" style="padding:32px 28px">
+<div style="width:44px;height:44px;border-radius:12px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></div>
+<b style="display:block;font:650 19px/1.35 'Pretendard';margin-bottom:10px">시스템으로 반복 해결</b>
+<p style="font-size:14.5px;color:#615D53">같은 문제가 반복되면 템플릿·규칙·AI 스킬로 구조화해 사람 의존을 줄입니다.</p>
+</div>
+<div class="card" style="padding:32px 28px">
+<div style="width:44px;height:44px;border-radius:12px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;margin-bottom:20px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><circle cx="8" cy="6" r="2" fill="#F4EBE1"/><circle cx="16" cy="12" r="2" fill="#F4EBE1"/><circle cx="10" cy="18" r="2" fill="#F4EBE1"/></svg></div>
+<b style="display:block;font:650 19px/1.35 'Pretendard';margin-bottom:10px">End-to-End 오너십</b>
+<p style="font-size:14.5px;color:#615D53">요구 정의부터 명세·프로토타입·개발 핸드오프까지 끊김 없이 책임집니다.</p>
+</div>
+</div>
 </section>
 
-<section class="tint">
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">JOURNEY</span>성장 서사</h2>
-      <p class="sec-desc">검증하는 눈 → 경계를 설계하는 감각 → End-to-End 오너십으로 확장돼 왔습니다.</p>
-    </div>
-    <div class="tl fx">
-      <div class="item"><div class="ph">STEP 1 · 공공 SI</div><b>대형 공공 정보화 사업 품질점검</b><p>요구사항·산출물을 앞단에서 점검. “뒤에서 고치는 것보다 앞에서 막는 게 싸다”는 front-loading 감각을 얻음.</p></div>
-      <div class="item"><div class="ph">STEP 2 · 플랫폼</div><b>이커머스 광고 도메인 운영 · AI 검수 기준 설계</b><p>AI 검수 도구의 한계를 분석하고, AI가 판단할 영역과 사람이 판단할 영역의 경계를 운영 기준으로 설계.</p></div>
-      <div class="item"><div class="ph">STEP 3 · B2B ERP</div><b>제약 유통 ERP 단독 기획 (End-to-End)</b><p>요구 정의부터 개발 핸드오프까지 오너십. 반복 업무는 커스텀 AI 스킬로 시스템화하고 산출물은 근거로 통제.</p></div>
-    </div>
-  </div>
+<!-- JOURNEY -->
+<section class="pad" style="padding:88px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+<h2 style="font:650 33px/1.2 'Pretendard';letter-spacing:-.025em">일해온 결</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">JOURNEY · 02</p>
+</div>
+<p style="color:#8A867C;font-size:15px;margin-bottom:28px">검증하는 눈 → 경계를 설계하는 감각 → End-to-End 오너십으로 이어진 흐름.</p>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><div class="mono" style="font:600 11px/1 ui-monospace;color:#B8825A;margin-bottom:12px">STEP 01</div><b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:8px">검증하는 눈</b><p style="font-size:14px;color:#615D53">공공 SI 품질점검에서 근거 없이는 통과시키지 않는 눈을 길렀습니다.</p></div>
+<div class="card" style="padding:30px 28px"><div class="mono" style="font:600 11px/1 ui-monospace;color:#B8825A;margin-bottom:12px">STEP 02</div><b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:8px">경계 설계</b><p style="font-size:14px;color:#615D53">이커머스 광고 AI 검수에서 AI와 사람의 역할 경계를 처음 설계했습니다.</p></div>
+<div class="card" style="padding:30px 28px"><div class="mono" style="font:600 11px/1 ui-monospace;color:#B8825A;margin-bottom:12px">STEP 03</div><b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:8px">E2E 오너십</b><p style="font-size:14px;color:#615D53">B2B ERP를 요구 정의부터 개발 핸드오프까지 단독으로 끌고 갔습니다.</p></div>
+</div>
 </section>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">TOOLKIT</span>도구와 학습</h2>
-    </div>
-    <div class="kv fx">
-      <div class="box">
-        <h3>주로 쓰는 도구</h3>
-        <div class="tags">
-          <span>Notion</span><span>Figma</span><span>Slack</span><span>SQL</span><span>Google Analytics</span><span>Claude</span><span>Gemini</span><span>Codex</span><span>Hermes Agent</span><span>Obsidian</span>
-        </div>
-      </div>
-      <div class="box">
-        <h3>학습 · 자격</h3>
-        <p class="learn">SQL 개발자 (SQLD) <span class="st">준비 중</span></p>
-        <p class="learn" style="margin-top:8px">프로젝트 관리 전문가 (CPMS) <span class="st">준비 중</span></p>
-      </div>
-    </div>
-  </div>
+<!-- TIMELINE -->
+<section class="pad" style="padding:88px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:32px">
+<h2 style="font:650 33px/1.2 'Pretendard';letter-spacing:-.025em">커리어</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">TIMELINE · 03</p>
+</div>
+<div class="fx" style="position:relative;padding-left:34px">
+<div style="position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:linear-gradient(#E4B583,#EAE8E2)"></div>
+<div style="position:relative;margin-bottom:16px">
+<div style="position:absolute;left:-34px;top:26px;width:12px;height:12px;border-radius:50%;background:#C08149;box-shadow:0 0 0 4px #F5F4F1"></div>
+<div class="card" style="padding:26px 30px">
+<div class="mono" style="font:600 12px/1 ui-monospace;color:#B8825A;margin-bottom:10px">2026.04 – 2026.06</div>
+<b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:4px">B2B ERP · PM (단독 기획)</b><p style="font-size:14.5px;color:#615D53">제약 유통 ERP 18개 메뉴를 요구 정의부터 개발 핸드오프까지 혼자 기획했습니다.</p>
+</div>
+</div>
+<div style="position:relative;margin-bottom:16px">
+<div style="position:absolute;left:-34px;top:26px;width:12px;height:12px;border-radius:50%;background:#D9B48C;box-shadow:0 0 0 4px #F5F4F1"></div>
+<div class="card" style="padding:26px 30px">
+<div class="mono" style="font:600 12px/1 ui-monospace;color:#B8825A;margin-bottom:10px">2025.06 – 2025.09</div>
+<b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:4px">이커머스 플랫폼 · PM</b><p style="font-size:14.5px;color:#615D53">AI 광고 검수의 기준과 프로세스를 설계하며, AI와 사람의 역할 경계를 처음 고민했습니다.</p>
+</div>
+</div>
+<div style="position:relative">
+<div style="position:absolute;left:-34px;top:26px;width:12px;height:12px;border-radius:50%;background:#C9C4B8;box-shadow:0 0 0 4px #F5F4F1"></div>
+<div class="card" style="padding:26px 30px">
+<div class="mono" style="font:600 12px/1 ui-monospace;color:#B8825A;margin-bottom:10px">2022.12 – 2024.11</div>
+<b style="display:block;font:650 18px/1.3 'Pretendard';margin-bottom:4px">공공 SI · 품질점검 PM</b><p style="font-size:14.5px;color:#615D53">256억 규모 국가 사업의 품질점검과 요구사항 관리를 맡았습니다.<br>근거로 판단하는 습관이 여기서 시작됐습니다.</p>
+</div>
+</div>
+</div>
 </section>
 
-<section class="tint">
-  <div class="wrap">
-    <div class="contact fx">
-      <h2>같이 이야기해요</h2>
-      <p>제품을 End-to-End로 이끌 PM을 찾고 계신다면 편하게 연락 주세요.</p>
-      <div class="btns">
-        <a href="mailto:wag8574@gmail.com">wag8574@gmail.com</a>
-        <a class="ghost" href="resume.pdf" target="_blank" rel="noopener">이력서 보기 (PDF)</a>
-      </div>
-    </div>
-  </div>
+<!-- SKILLS -->
+<section class="pad" style="padding:88px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:32px">
+<h2 style="font:650 33px/1.2 'Pretendard';letter-spacing:-.025em">스킬 &amp; 도구</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">SKILLS · 04</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:28px 26px">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:18px"><span style="width:7px;height:7px;border-radius:50%;background:#C08149"></span><span class="mono" style="font:600 11px/1 ui-monospace;color:#8A867C;letter-spacing:.06em">PRODUCT</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">PRD 작성</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">기능명세</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">요구사항 관리</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">결정로그</span>
+</div>
+</div>
+<div class="card" style="padding:28px 26px">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:18px"><span style="width:7px;height:7px;border-radius:50%;background:#C08149"></span><span class="mono" style="font:600 11px/1 ui-monospace;color:#8A867C;letter-spacing:.06em">AI &amp; AUTOMATION</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">커스텀 AI 스킬</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">SSOT Q&amp;A 봇</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">STT 커스텀 사전</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">검증 기준 설계</span>
+</div>
+</div>
+<div class="card" style="padding:28px 26px">
+<div style="display:flex;align-items:center;gap:9px;margin-bottom:18px"><span style="width:7px;height:7px;border-radius:50%;background:#C08149"></span><span class="mono" style="font:600 11px/1 ui-monospace;color:#8A867C;letter-spacing:.06em">TOOLS</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Notion</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Figma</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Slack</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">SQL</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Google Analytics</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Claude</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Gemini</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Codex</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Hermes Agent</span>
+<span style="font:500 13px/1 'Pretendard';background:#fff;border:1px solid #E4DDD1;color:#4A463E;border-radius:8px;padding:9px 13px">Obsidian</span>
+</div>
+</div>
+</div>
+<div class="fx card" style="margin-top:16px;padding:24px 30px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+<span class="mono" style="font:600 11px/1 ui-monospace;color:#8A867C;letter-spacing:.06em">학습·자격</span>
+<span style="font:500 13.5px/1 'Pretendard';color:#4A463E">SQLD <span style="color:#8A867C">준비 중</span></span>
+<span style="color:#DEDBD3">·</span>
+<span style="font:500 13.5px/1 'Pretendard';color:#4A463E">CPMS <span style="color:#8A867C">준비 중</span></span>
+</div>
 </section>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 조명호 (Kai)</span>
-    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
-  </div>
+<!-- CONTACT -->
+<section class="pad" style="padding:88px 12px 0">
+<div class="fx card" style="padding:48px 44px;background:#26262B;border:none;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap">
+<div>
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em;color:#F5F4F1;margin-bottom:10px">함께 일해요</h2>
+<p style="font-size:15.5px;color:#A19D93;max-width:440px">근거로 판단하고 시스템으로 반복을 없애는 PM이 필요하시다면 언제든 연락 주세요.</p>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a href="mailto:wag8574@gmail.com" style="background:#E4B583;color:#26262B;padding:14px 26px;border-radius:12px;font:600 14px/1 'Pretendard'">wag8574@gmail.com</a>
+<a href="resume.pdf" target="_blank" rel="noopener" style="background:transparent;color:#F5F4F1;border:1px solid rgba(245,244,241,.25);padding:14px 26px;border-radius:12px;font:600 14px/1 'Pretendard'">이력서 (PDF)</a>
+</div>
+</div>
+</section>
+
+<footer class="pad" style="padding:56px 12px 56px;border-top:1px solid #EAE8E2;margin-top:56px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8A867C">
+<span style="flex-basis:100%;order:-1;font-size:12px;color:#A19D93">본 사이트의 데모·표·샘플은 실제 산출물 기반 재현본이며, 고객사·사내 정보는 비식별화했습니다.</span>
+<span>© 2026 조명호 (Kai) · <a href="resume.pdf" target="_blank" rel="noopener" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">이력서 보기</a></span>
+<span>이 사이트는 직접 설계한 <b style="color:#26262B">AI 워크플로우</b>로 제작됐습니다 → <a href="making.html" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">Making of</a></span>
 </footer>
 
-<script>
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
-  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
-</script>
+</div>
 
+<script>document.addEventListener("DOMContentLoaded",function(){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+    document.querySelectorAll('.fx').forEach(el=>io.observe(el));
+});</script>
 </body>
 </html>

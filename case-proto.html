@@ -1,339 +1,225 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>프로토타입 데모 — 동작하는 화면으로 전달 · 조명호</title>
-<meta property="og:type" content="article">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>스펙 문서 대신 동작하는 화면으로 · 조명호 (Kai)</title>
+<meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:title" content="프로토타입 데모 — 텍스트 스펙 대신 동작하는 화면으로 전달">
-<meta property="og:description" content="기획 의도를 문서가 아니라 동작하는 화면으로 전달하고, jsdom 자동화 테스트로 검증한 방법론.">
-<meta name="description" content="텍스트 스펙 대신 동작하는 프로토타입으로 기획을 전달하고 자동화 테스트로 검증한 방법론 — 인터랙티브 재현 샘플 포함.">
-<meta name="twitter:card" content="summary_large_image">
+<meta property="og:title" content="스펙 문서 대신 동작하는 화면으로 · 조명호">
+<meta property="og:description" content="HTML 프로토타입 18종 + 자동화 테스트로 기획 의도를 라이브로 증명한 방법론.">
+<meta name="description" content="HTML 프로토타입 18종 + 자동화 테스트로 기획 의도를 라이브로 증명한 방법론.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-  :root{
-    --bg:#F3F3F5; --paper:#FFFFFF; --ink:#1A1A1F; --sub:#77777E;
-    --line:#ECECEF; --line2:#DEDEE3; --tint:#EDEDF0;
-    --amber-bg:#F1E8D3; --amber-tx:#7A5E2A; --green-bg:#E4EDE6; --green-tx:#46654F;
-    --sh-sm:0 1px 2px rgba(20,20,30,.04); --sh:0 2px 8px rgba(20,20,30,.04),0 12px 34px rgba(20,20,30,.05);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Pretendard',-apple-system,sans-serif;color:var(--ink);background:var(--bg);line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased;}
-  a{color:inherit;text-decoration:none;}
-  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
-  .fx{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
-  .fx.in{opacity:1;transform:none;}
-
-  nav{position:sticky;top:0;background:rgba(243,243,245,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);z-index:20;}
-  .nav-inner{max-width:1000px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-  .nav-logo{font-weight:800;font-size:13.5px;letter-spacing:.04em;}
-  .nav-logo a{color:inherit;}
-  .nav-logo em{font-style:normal;color:var(--sub);font-weight:600;}
-  .nav-links{display:flex;gap:20px;font-size:13px;flex-wrap:wrap;}
-  .nav-links a{color:var(--sub);transition:color .15s;}
-  .nav-links a:hover{color:var(--ink);}
-  .nav-links a.active{color:var(--ink);font-weight:700;}
-  .nav-links span.soon{color:#B4B4BA;cursor:default;}
-
-  .hero{position:relative;padding:80px 0 8px;overflow:hidden;}
-  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 380px at 82% -12%,#E9E9EE,transparent 60%);z-index:-1;}
-  .eyebrow{display:inline-block;font-weight:800;font-size:12px;letter-spacing:.14em;color:var(--sub);border:1px solid var(--line2);background:var(--paper);padding:6px 14px;border-radius:99px;margin-bottom:22px;box-shadow:var(--sh-sm);}
-  h1{font-size:38px;font-weight:800;line-height:1.3;margin-bottom:22px;letter-spacing:-.02em;}
-  .meta-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
-  .mchip{font-size:13px;background:var(--paper);border:1px solid var(--line);padding:6px 13px;border-radius:99px;color:var(--sub);}
-  .lead{color:var(--sub);max-width:720px;margin-top:26px;font-size:16.5px;}
-
-  section{padding:72px 0;}
-  section.tint{background:var(--tint);}
-  .sec-head{margin-bottom:28px;}
-  h2{font-size:27px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em;}
-  h2 .num{color:var(--sub);font-size:12.5px;font-weight:800;letter-spacing:.14em;display:block;margin-bottom:10px;}
-  .sec-desc{color:var(--sub);max-width:700px;}
-  h3{font-size:18px;font-weight:800;margin:30px 0 12px;}
-
-  .judge{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:14px;padding:22px 26px;box-shadow:var(--sh-sm);margin:22px 0;font-size:14.5px;line-height:1.72;}
-  .judge b{display:flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.08em;margin-bottom:10px;}
-  .insight{background:var(--tint);border-radius:16px;padding:22px 26px;font-size:14.5px;margin-top:22px;line-height:1.72;}
-  .insight b{color:var(--ink);}
-
-  /* compare: 문서 vs 화면 */
-  .vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
-  .vs .col{border-radius:16px;padding:24px;border:1px solid var(--line);box-shadow:var(--sh-sm);}
-  .vs .doc{background:var(--paper);}
-  .vs .scr{background:var(--ink);color:#F3F3F5;}
-  .vs .k{font-size:11.5px;font-weight:800;letter-spacing:.08em;margin-bottom:12px;color:var(--sub);}
-  .vs .scr .k{color:#9A9AA2;}
-  .vs b.t{display:block;font-size:16px;margin-bottom:8px;}
-  .vs .scr b.t{color:#fff;}
-  .vs p{font-size:13.5px;color:var(--sub);}
-  .vs .scr p{color:#B9B9C0;}
-
-  /* browser frame */
-  .frame{border-radius:16px;overflow:hidden;margin:8px 0 0;background:var(--paper);box-shadow:var(--sh);border:1px solid var(--line);}
-  .chrome{background:#F1F1F3;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:8px;}
-  .chrome .dots{display:flex;gap:6px;}
-  .chrome .dots i{width:11px;height:11px;border-radius:50%;display:block;}
-  .chrome .dots i:nth-child(1){background:#FF5F57;}
-  .chrome .dots i:nth-child(2){background:#FEBC2E;}
-  .chrome .dots i:nth-child(3){background:#28C840;}
-  .chrome .title{font-size:12.5px;color:var(--sub);}
-  .chrome .label{font-size:11.5px;font-weight:700;color:var(--amber-tx);background:var(--amber-bg);padding:3px 10px;border-radius:99px;margin-left:auto;}
-
-  /* prototype app */
-  .proto-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
-  .proto-toolbar .count{font-size:13px;color:var(--sub);}
-  .proto-toolbar .count b{color:var(--ink);}
-  .btn{font-family:inherit;font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:opacity .15s;}
-  .btn:hover{opacity:.88;}
-  .btn.ghost{background:var(--paper);color:var(--ink);border-color:var(--line2);}
-  .btn.ghost:hover{border-color:var(--ink);opacity:1;}
-  .proto-main{display:grid;grid-template-columns:1fr 1fr;min-height:280px;}
-  .proto-list{list-style:none;border-right:1px solid var(--line);}
-  .proto-list li{padding:14px 20px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .12s;}
-  .proto-list li:hover{background:var(--tint);}
-  .proto-list li.sel{background:var(--tint);box-shadow:inset 3px 0 0 var(--ink);}
-  .proto-list .nm{font-size:14px;font-weight:600;}
-  .badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap;}
-  .badge.ok{background:var(--green-bg);color:var(--green-tx);}
-  .badge.tmp{background:var(--amber-bg);color:var(--amber-tx);}
-  .badge.stop{background:var(--tint);color:var(--sub);border:1px solid var(--line2);}
-  .proto-detail{padding:22px 24px;font-size:14px;}
-  .proto-detail .dnm{font-size:18px;font-weight:800;margin-bottom:4px;}
-  .proto-detail .drow{display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line2);font-size:13.5px;}
-  .proto-detail .drow:last-child{border-bottom:none;}
-  .proto-detail .dk{color:var(--sub);min-width:88px;}
-  .proto-detail .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;}
-  .proto-empty{color:var(--sub);font-size:13.5px;padding-top:8px;}
-
-  /* modal */
-  .backdrop{position:fixed;inset:0;background:rgba(20,20,25,.42);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;}
-  .backdrop[hidden]{display:none;}
-  .modal{background:var(--paper);border-radius:18px;padding:28px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,.25);}
-  .modal h4{font-size:18px;font-weight:800;margin-bottom:18px;}
-  .modal label{display:block;font-size:12.5px;font-weight:700;color:var(--sub);margin-bottom:16px;}
-  .modal input,.modal select{width:100%;margin-top:6px;font-family:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line2);border-radius:10px;background:#fff;color:var(--ink);}
-  .modal input:focus,.modal select:focus{outline:none;border-color:var(--ink);}
-  .modal .err{background:var(--amber-bg);color:var(--amber-tx);font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:9px;margin-bottom:14px;}
-  .modal .err[hidden]{display:none;}
-  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap;}
-
-  /* code block */
-  .code{background:#1A1A1F;color:#E7E7EA;border-radius:16px;padding:24px 22px;overflow-x:auto;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12.5px;line-height:1.7;margin-top:8px;box-shadow:var(--sh);}
-  .code .cm{color:#8C8C92;}
-  .code .kw{color:#C8B4F0;}
-  .code .st{color:#9FD0A8;}
-  .code .fn{color:#8FC7E8;}
-  .test-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
-  .test-steps .ts{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--sh-sm);}
-  .test-steps .ts .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--sub);margin-bottom:10px;}
-  .test-steps .ts b{display:block;font-size:15px;margin-bottom:6px;}
-  .test-steps .ts p{font-size:13px;color:var(--sub);}
-
-  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
-  .next-nav{display:flex;justify-content:space-between;padding:40px 0;font-size:14.5px;font-weight:600;}
-  .next-nav .muted{color:#B4B4BA;}
-  footer{border-top:1px solid var(--line);padding:40px 0 56px;font-size:13px;color:var(--sub);}
-  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
-
-  @media(max-width:760px){
-    h1{font-size:28px;}
-    .vs{grid-template-columns:1fr;}
-    .proto-main{grid-template-columns:1fr;}
-    .proto-list{border-right:none;border-bottom:1px solid var(--line);}
-    .test-steps{grid-template-columns:1fr;}
-  }
+body{word-break:keep-all;overflow-wrap:break-word}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard',-apple-system,sans-serif;color:#26262B;background:#F5F4F1;line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:#1A1A1F}
+.fx{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.fx.in{opacity:1;transform:none}
+.mono{font-family:ui-monospace,Menlo,monospace}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{50%{opacity:0}}
+.card{background:#fff;border:1px solid #EAE8E2;border-radius:20px;box-shadow:0 1px 2px rgba(40,38,32,.03),0 8px 30px rgba(40,38,32,.05)}
+nav a.navlink:hover{color:#26262B}
+@media(max-width:860px){.h1big{font-size:44px!important}.colrow{grid-template-columns:1fr!important}.statrow{flex-wrap:wrap}.statrow>div{flex:1 0 46%!important}.pad{padding-left:26px!important;padding-right:26px!important}.navlinks{gap:14px!important;font-size:12.5px!important}}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-inner">
-    <span class="nav-logo"><a href="index.html">JOE MYEONGHO <em>· PM</em></a></span>
-    <div class="nav-links">
-      <a href="index.html">홈</a>
-      <a href="case-erp.html">B2B ERP</a>
-      <a href="case-ai.html">AI 시스템</a>
-      <a href="case-proto.html" class="active">프로토타입</a>
-      <a href="case-public.html">공공·플랫폼</a>
-      <a href="samples.html">산출물 샘플</a>
-      <a href="making.html">Making of</a>
-      <a href="about.html">About</a>
-    </div>
-  </div>
+<div style="max-width:1140px;margin:0 auto;padding:0 24px">
+
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 12px;background:rgba(245,244,241,.82);backdrop-filter:blur(14px)">
+<span style="font:700 14px/1 'Pretendard';letter-spacing:-.01em">Joe Myeongho <span style="color:#9A968C;font-weight:500">· PM</span></span>
+<span class="navlinks" style="display:flex;gap:20px;font-size:13.5px;color:#8A867C;flex-wrap:wrap">
+<a class="navlink" href="index.html">홈</a>
+<a class="navlink" href="case-erp.html">B2B ERP</a>
+<a class="navlink" href="case-ai.html">AI 시스템</a>
+<a class="navlink" href="case-proto.html" style="color:#26262B;font-weight:600">프로토타입</a>
+<a class="navlink" href="case-public.html">공공 SI</a>
+<a class="navlink" href="case-ads.html">AI 검수</a>
+<a class="navlink" href="samples.html">산출물 샘플</a>
+<a class="navlink" href="making.html">Making of</a>
+<a class="navlink" href="about.html">About</a>
+</span>
 </nav>
 
-<div class="hero">
-  <div class="wrap">
-    <span class="eyebrow">CASE 03 · 프로토타입 데모</span>
-    <h1>텍스트 스펙 대신<br>동작하는 화면으로 전달</h1>
-    <div class="meta-chips">
-      <span class="mchip">인터랙티브 재현 샘플</span><span class="mchip">동작하는 화면 = 스펙</span><span class="mchip">jsdom 자동화 검증</span>
-    </div>
-    <p class="lead">문서로 “이렇게 동작합니다”라고 쓰는 대신, <b>실제로 눌러볼 수 있는 화면</b>으로 기획 의도를 전달합니다. 아래 데모는 마우스로 직접 조작해볼 수 있습니다. <em style="font-style:normal;color:var(--amber-tx)">가상 도메인으로 만든 재현 샘플이며 실제 산출물이 아닙니다.</em></p>
-  </div>
+<header style="padding:52px 12px 8px">
+<a href="index.html" class="mono" style="display:inline-flex;align-items:center;gap:8px;font:600 12px/1 ui-monospace;color:#8A867C;margin-bottom:34px">← 홈으로</a>
+<div class="mono" style="display:flex;gap:10px;align-items:center;font:600 11.5px/1 ui-monospace;letter-spacing:.14em;color:#B8825A;margin-bottom:24px"><span style="width:6px;height:6px;border-radius:50%;background:#C08149"></span>CASE 03 · 프로토타입</div>
+<h1 class="h1big" style="font:650 60px/1.08 'Pretendard';letter-spacing:-.035em;margin:0 0 24px;max-width:900px">스펙 문서 대신<br><span style="color:#C08149">동작하는 화면</span>으로</h1>
+<p style="max-width:640px;font-size:17.5px;line-height:1.78;color:#615D53;margin:0 0 36px">텍스트 명세만으로는 전달되지 않는 인터랙션·상태 변화를, 실제로 동작하는 프로토타입으로 만들어 기획 의도를 정확히 전달했습니다. 개발자와 고객이 같은 화면을 보며 논의하게 만든 방법론입니다.</p>
+<div class="card statrow" style="display:flex;overflow:hidden">
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">18종</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">주요 메뉴 프로토타입</span></div>
+<div style="flex:1;padding:24px 26px;border-right:1px solid #F0EEE8"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em">실시간</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#8A867C;margin-top:8px">회의 중 수정·확인</span></div>
+<div style="flex:1;padding:24px 26px;background:#26262B"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#F5F4F1">↓재작업</b><span style="display:block;font:500 12px/1.5 'Pretendard';color:#A19D93;margin-top:8px">해석 차이 최소화</span></div>
+</div>
+</header>
+
+<section class="pad" style="padding:80px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">문제</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">PROBLEM · 01</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">같은 문서, 서로 다른 해석</b><p style="font-size:14.5px;color:#615D53">같은 명세를 읽어도 기획·개발·고객이 서로 다른 화면을 상상했습니다.</p></div>
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">말로는 설명이 안 되는 화면 흐름</b><p style="font-size:14.5px;color:#615D53">로딩·에러·빈 상태, 단계 전환 같은 동적 요소는 텍스트로 전달이 어려웠습니다.</p></div>
+<div class="card" style="padding:30px 28px"><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:10px">오해는 꼭 늦게 터진다</b><p style="font-size:14.5px;color:#615D53">개발이 끝난 뒤에야 "이게 아닌데"가 나와 재작업 비용이 컸습니다.</p></div>
+</div>
+</section>
+
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">판단</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">JUDGMENT · 02</p>
+<p style="color:#8A867C;font-size:15px;width:100%">말로 설득하지 않고, 보여주고 만지게 했습니다.</p>
+</div>
+<div class="fx" style="display:flex;flex-direction:column;gap:14px">
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">01</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">핵심 플로우를 동작 화면으로</b><p style="font-size:14.5px;color:#615D53">논쟁이 되는 화면과 상태 전환을 HTML 프로토타입으로 구현해, 클릭하며 확인할 수 있게 했습니다.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">02</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">회의 중 즉시 수정</b><p style="font-size:14.5px;color:#615D53">피드백이 나오면 그 자리에서 화면을 고쳐 다시 보여주며, 논의를 다음 회의로 넘기지 않았습니다.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">03</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">확정 화면을 명세의 기준으로</b><p style="font-size:14.5px;color:#615D53">합의된 프로토타입을 기능명세의 시각 기준으로 삼아, 문서와 구현 사이 해석 차이를 없앴습니다.</p></div>
+</div>
+</div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">라이브로 증명</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">LIVE DEMO · 03</p>
+<p style="color:#8A867C;font-size:15px;width:100%">HTML 프로토타입 주요 메뉴 18종 + 자동화 테스트로 동작을 검증했습니다. 아래는 상태 전환을 직접 눌러볼 수 있는 재현 데모입니다 (실제 산출물 기반 재현본 · 비식별화).</p>
 </div>
 
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">WHY</span>왜 문서가 아니라 화면인가</h2>
-      <p class="sec-desc">같은 기획을 전달하는 두 가지 방법. 오른쪽이 해석의 여지를 줄입니다.</p>
-    </div>
-    <div class="vs fx">
-      <div class="col doc">
-        <div class="k">문서 스펙</div>
-        <b class="t">“필수값이 없으면 임시저장으로 처리한다”</b>
-        <p>읽는 사람마다 ‘임시저장’의 동작을 다르게 상상합니다. 버튼 위치, 배지 표시, 목록 반영 방식은 결국 개발 단계에서 다시 질문으로 돌아옵니다.</p>
-      </div>
-      <div class="col scr">
-        <div class="k">동작하는 화면</div>
-        <b class="t">눌러보면 바로 안다</b>
-        <p>임시저장을 누르면 목록에 ‘임시’ 배지가 붙는다 — 설명이 필요 없습니다. 엣지 케이스(필수값 누락 시 등록 차단)도 직접 체험되므로 합의가 빨라집니다.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="tint">
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">DEMO</span>거래처 관리 · 직접 조작해보세요</h2>
-      <p class="sec-desc">항목을 클릭하면 상세가 열리고, ‘거래처 등록’으로 새 항목을 추가할 수 있습니다. 등록 시 사업자번호가 없으면 차단되고, 임시저장은 필수값 없이도 ‘임시’ 상태로 추가됩니다.</p>
-    </div>
-    <div class="frame fx">
-      <div class="chrome"><span class="dots"><i></i><i></i><i></i></span><span class="title">거래처 관리 — 가상 도메인 (유통 ERP)</span><span class="label">인터랙티브 재현 샘플</span></div>
-      <div class="proto-toolbar">
-        <button class="btn" id="btnNew">+ 거래처 등록</button>
-        <span class="count"><b id="cnt">3</b>개 거래처 · 클릭해서 상세 보기</span>
-      </div>
-      <div class="proto-main">
-        <ul class="proto-list" id="list" aria-label="거래처 목록"></ul>
-        <div class="proto-detail" id="detail"><div class="proto-empty">왼쪽 목록에서 거래처를 선택하세요.</div></div>
-      </div>
-    </div>
-    <p class="hint">※ 데이터는 브라우저 메모리에만 저장되며 새로고침하면 초기화됩니다.</p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head fx">
-      <h2><span class="num">검증</span>프로토타입도 테스트로 지킨다</h2>
-      <p class="sec-desc">동작하는 화면이라면 동작을 자동으로 검증할 수 있습니다. 위 데모의 핵심 규칙을 jsdom 기반 테스트로 고정해, 화면을 수정해도 규칙이 깨지지 않게 했습니다.</p>
-    </div>
-    <div class="judge fx"><b>WHY · 왜 테스트까지</b>프로토타입은 “한 번 보여주고 버리는 것”으로 취급되기 쉽지만, 기획 의도가 담긴 규칙(필수값 검증·임시저장 동작)은 이후 실제 개발의 기준이 됩니다. 테스트로 규칙을 코드화해 두면, 화면이 바뀌어도 <b>“무엇이 맞는 동작인지”</b>가 흔들리지 않습니다.</div>
-    <pre class="code fx"><span class="cm">// prototype.test.js — jsdom 자동화 검증 (발췌)</span>
-<span class="kw">test</span>(<span class="st">'등록 시 사업자번호가 없으면 저장을 막는다'</span>, () => {
-  <span class="fn">openModal</span>();
-  <span class="fn">fill</span>(<span class="st">'#f-name'</span>, <span class="st">'가상상사'</span>);      <span class="cm">// 사업자번호는 비움</span>
-  <span class="fn">click</span>(<span class="st">'#btnSave'</span>);
-  <span class="kw">expect</span>($(<span class="st">'#err'</span>).hidden).<span class="fn">toBe</span>(false);   <span class="cm">// 에러 노출</span>
-  <span class="kw">expect</span>(<span class="fn">rows</span>().length).<span class="fn">toBe</span>(3);          <span class="cm">// 목록 불변</span>
-});
-
-<span class="kw">test</span>(<span class="st">'임시저장은 필수값 없이도 항목을 추가한다'</span>, () => {
-  <span class="fn">openModal</span>();
-  <span class="fn">fill</span>(<span class="st">'#f-name'</span>, <span class="st">'임시 거래처'</span>);
-  <span class="fn">click</span>(<span class="st">'#btnDraft'</span>);
-  <span class="kw">expect</span>(<span class="fn">rows</span>().length).<span class="fn">toBe</span>(4);          <span class="cm">// 1건 추가</span>
-  <span class="kw">expect</span>(<span class="fn">lastBadge</span>()).<span class="fn">toBe</span>(<span class="st">'임시'</span>);       <span class="cm">// 임시 배지</span>
-});</pre>
-    <div class="test-steps fx">
-      <div class="ts"><div class="k">STEP 1</div><b>화면 제작</b><p>기획 의도를 실제 동작하는 HTML/JS 화면으로 구현.</p></div>
-      <div class="ts"><div class="k">STEP 2</div><b>규칙 테스트화</b><p>필수값 검증·임시저장 등 핵심 규칙을 jsdom 테스트로 고정.</p></div>
-      <div class="ts"><div class="k">STEP 3</div><b>회귀 방지</b><p>화면을 수정해도 규칙이 깨지면 테스트가 실패로 알림.</p></div>
-    </div>
-    <div class="insight fx"><b>기획도 “돌려서” 검증할 수 있습니다</b> — 프로토타입을 테스트 가능한 형태로 만들면, 기획 의도가 말이 아니라 실행 가능한 기준으로 남습니다. 이 포트폴리오 사이트 자체도 같은 방식으로 자동 검증하며 만들었습니다.</div>
-  </div>
-</section>
-
-<div class="wrap next-nav">
-  <a href="case-ai.html">← AI 시스템</a>
-  <a href="case-public.html">다음: 공공 SI · 플랫폼 →</a>
+<div class="fx card" style="margin:14px 0 0;padding:30px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;border:1.5px solid #C08149">
+<div style="flex:1;min-width:260px"><div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#B8825A;margin-bottom:10px">REAL ARTIFACT</div><b style="display:block;font:650 20px/1.35 'Pretendard';margin-bottom:8px">실제 제작 프로토타입 열어보기 — 약국 관리</b><p style="font-size:14px;color:#615D53">프로젝트에서 실제로 팀에 공유했던 프로토타입의 사본입니다.<br>고객사 정보는 비식별화했고 데이터는 더미이지만, 화면 구조·인터랙션·소스 출처 태그는 당시 그대로입니다.</p></div>
+<a href="proto-demo.html" style="background:#26262B;color:#F5F4F1;padding:14px 26px;border-radius:12px;font:600 14.5px/1 'Pretendard';white-space:nowrap">프로토타입 실행 →</a>
 </div>
 
-<footer>
-  <div class="wrap">
-    <span>© 2026 조명호 (Kai) · wag8574@gmail.com · <a href="resume.pdf" target="_blank" rel="noopener">이력서 보기</a></span>
-    <span>이 사이트는 직접 설계한 AI 워크플로우로 제작됐습니다 → <a href="making.html">Making of</a></span>
-  </div>
+<div class="fx card" style="margin:16px 0 0;padding:0;overflow:hidden">
+<div style="background:#26262B;padding:11px 18px;display:flex;align-items:center;gap:8px">
+<span style="display:flex;gap:6px"><i style="width:11px;height:11px;border-radius:50%;background:#FF5F57;display:block"></i><i style="width:11px;height:11px;border-radius:50%;background:#FEBC2E;display:block"></i><i style="width:11px;height:11px;border-radius:50%;background:#28C840;display:block"></i></span>
+<span style="font:400 12.5px/1 'Pretendard';color:#A19D93">proto-demo.html — 약국 관리 (실물 · 비식별화 사본)</span>
+</div>
+<div id="protoViewport" style="position:relative;width:100%;height:520px;overflow:hidden;background:#fff">
+<iframe id="protoFrame" src="proto-demo.html" title="약국 관리 프로토타입 실물" loading="lazy" style="width:1440px;height:1000px;border:0;background:#fff;transform-origin:0 0;position:absolute;left:0;top:0"></iframe>
+</div>
+<p style="padding:12px 18px;margin:0;font-size:12.5px;color:#8A867C;background:#FAF9F6;border-top:1px solid #EAE8E2">전체 화면은 축소 미리보기입니다 — 위의 "프로토타입 실행"으로 원본 크기로 열 수 있습니다.</p>
+</div>
+
+<div class="fx card" style="overflow:hidden;padding:0;margin-top:16px">
+<div style="display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid #F0EEE8;background:#FAF9F6">
+<span style="width:9px;height:9px;border-radius:50%;background:#E4B583"></span><span style="width:9px;height:9px;border-radius:50%;background:#C79A6E"></span><span style="width:9px;height:9px;border-radius:50%;background:#D8D4CA"></span>
+<span class="mono" style="margin-left:8px;font:500 11px/1 ui-monospace;color:#8A867C">SCR-03 · 거래처 등록</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;padding:16px 18px;border-bottom:1px solid #F0EEE8">
+<button onclick="protoState('idle')" data-chip="idle" style="cursor:pointer;font:600 12.5px/1 'Pretendard';border:1px solid #E1DFD8;background:#fff;color:#4A463E;border-radius:8px;padding:9px 14px">기본</button>
+<button onclick="protoState('typing')" data-chip="typing" style="cursor:pointer;font:600 12.5px/1 'Pretendard';border:1px solid #E1DFD8;background:#fff;color:#4A463E;border-radius:8px;padding:9px 14px">입력 중</button>
+<button onclick="protoState('saving')" data-chip="saving" style="cursor:pointer;font:600 12.5px/1 'Pretendard';border:1px solid #E1DFD8;background:#fff;color:#4A463E;border-radius:8px;padding:9px 14px">저장 중</button>
+<button onclick="protoState('done')" data-chip="done" style="cursor:pointer;font:600 12.5px/1 'Pretendard';border:1px solid #E1DFD8;background:#fff;color:#4A463E;border-radius:8px;padding:9px 14px">완료</button>
+<button onclick="protoState('error')" data-chip="error" style="cursor:pointer;font:600 12.5px/1 'Pretendard';border:1px solid #E7D3D0;background:#fff;color:#A05A50;border-radius:8px;padding:9px 14px">에러</button>
+</div>
+<div style="min-height:220px;padding:28px 30px;display:flex;flex-direction:column;justify-content:center">
+<div data-state="idle" style="display:none">
+<div>
+<label style="display:block;font:600 12px/1 'Pretendard';color:#8A867C;margin-bottom:8px">거래처명</label>
+<div style="height:44px;border:1px solid #E1DFD8;border-radius:10px;display:flex;align-items:center;padding:0 14px;color:#B4B0A6;font-size:14px">거래처명을 입력하세요</div>
+<button style="margin-top:18px;font:600 13px/1 'Pretendard';border:none;background:#E7E4DD;color:#A8A498;border-radius:10px;padding:13px 22px;cursor:not-allowed">저장</button>
+</div>
+</div>
+<div data-state="typing" style="display:none">
+<div>
+<label style="display:block;font:600 12px/1 'Pretendard';color:#8A867C;margin-bottom:8px">거래처명</label>
+<div style="height:44px;border:1.5px solid #C08149;border-radius:10px;display:flex;align-items:center;padding:0 14px;color:#26262B;font-size:14px">대한제약<span style="width:1.5px;height:18px;background:#C08149;margin-left:2px;animation:blink 1s step-end infinite"></span></div>
+<button onclick="protoState('saving')" data-chip="saving" style="margin-top:18px;font:600 13px/1 'Pretendard';border:none;background:#26262B;color:#fff;border-radius:10px;padding:13px 22px;cursor:pointer">저장</button>
+</div>
+</div>
+<div data-state="saving" style="display:none">
+<div style="display:flex;flex-direction:column;align-items:center;gap:16px;color:#8A867C">
+<div style="width:34px;height:34px;border:3px solid #EAE8E2;border-top-color:#C08149;border-radius:50%;animation:spin .8s linear infinite"></div>
+<span style="font:500 14px/1 'Pretendard'">저장 중…</span>
+</div>
+</div>
+<div data-state="done" style="display:none">
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+<div style="width:46px;height:46px;border-radius:50%;background:#EAF4EC;color:#4E9E6A;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+<b style="font:650 16px/1.3 'Pretendard'">거래처가 등록되었습니다</b>
+<span class="mono" style="font:500 11.5px/1 ui-monospace;color:#8A867C">SCR-03 → SCR-04 목록으로 이동</span>
+</div>
+</div>
+<div data-state="error" style="display:none">
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+<div style="width:46px;height:46px;border-radius:50%;background:#F7EAE7;color:#A05A50;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+<b style="font:650 16px/1.3 'Pretendard'">중복된 사업자번호입니다</b>
+<span class="mono" style="font:500 11.5px/1 ui-monospace;color:#A05A50">검증 규칙 위반 · 저장 차단</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="pad" style="padding:72px 12px 0">
+<div class="fx" style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:28px">
+<h2 style="font:650 30px/1.2 'Pretendard';letter-spacing:-.025em">결과</h2>
+<p class="mono" style="color:#B8825A;font:600 11.5px/1 ui-monospace;letter-spacing:.1em">RESULT · 04</p>
+</div>
+<div class="fx colrow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="padding:30px 28px"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">조기</b><p style="font-size:14px;color:#615D53;margin-top:12px">오해를 개발 전에 발견·정정</p></div>
+<div class="card" style="padding:30px 28px"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">합의</b><p style="font-size:14px;color:#615D53;margin-top:12px">고객·개발이 같은 화면 위에서 결정</p></div>
+<div class="card" style="padding:30px 28px"><b style="font:700 30px/1 'Pretendard';letter-spacing:-.02em;color:#C08149">이 사이트</b><p style="font-size:14px;color:#615D53;margin-top:12px">이 포트폴리오 자체가 그 방법론의 증거</p></div>
+</div>
+</section>
+
+<section class="pad" style="padding:72px 12px 0">
+<a href="case-public.html" class="fx card" style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:30px 32px;background:#26262B;border:none">
+<div><div class="mono" style="font:600 11px/1 ui-monospace;letter-spacing:.08em;color:#A19D93;margin-bottom:10px">다음 케이스 · CASE 04</div><b style="font:650 22px/1.3 'Pretendard';color:#F5F4F1">공공 SI — 256억 국가 사업</b></div>
+<span class="mono" style="font:600 14px/1 ui-monospace;color:#E4B583;white-space:nowrap">보기 →</span>
+</a>
+</section>
+
+<footer class="pad" style="padding:56px 12px 56px;border-top:1px solid #EAE8E2;margin-top:56px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#8A867C">
+<span style="flex-basis:100%;order:-1;font-size:12px;color:#A19D93">본 사이트의 데모·표·샘플은 실제 산출물 기반 재현본이며, 고객사·사내 정보는 비식별화했습니다.</span>
+<span>© 2026 조명호 (Kai) · <a href="resume.pdf" target="_blank" rel="noopener" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">이력서 보기</a></span>
+<a href="mailto:wag8574@gmail.com" style="color:#26262B;text-decoration:underline;text-underline-offset:3px">wag8574@gmail.com</a>
 </footer>
 
-<div class="backdrop" id="modal" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-label="거래처 등록">
-    <h4>거래처 등록</h4>
-    <div class="err" id="err" hidden>사업자번호는 등록 시 필수입니다. (임시저장은 가능)</div>
-    <label>거래처명<input id="f-name" type="text" placeholder="예: 가상상사"></label>
-    <label>사업자번호<input id="f-biz" type="text" placeholder="000-00-00000" inputmode="numeric"></label>
-    <label>유형<select id="f-type"><option>도매</option><option>소매</option><option>병원</option><option>기타</option></select></label>
-    <div class="modal-actions">
-      <button class="btn ghost" id="btnCancel">취소</button>
-      <button class="btn ghost" id="btnDraft">임시저장</button>
-      <button class="btn" id="btnSave">등록</button>
-    </div>
-  </div>
 </div>
 
 <script>
-(function(){
-  var data=[
-    {name:'가온유통',biz:'201-81-45021',type:'도매',status:'ok'},
-    {name:'미래약품',biz:'118-86-77302',type:'병원',status:'ok'},
-    {name:'한빛상사',biz:'',type:'소매',status:'stop'}
-  ];
-  var sel=-1;
-  var $=function(s){return document.querySelector(s);};
-  var list=$('#list'),detail=$('#detail'),cnt=$('#cnt'),modal=$('#modal'),err=$('#err');
-  var STAT={ok:['ok','정상'],tmp:['tmp','임시'],stop:['stop','중단']};
-
-  function render(){
-    list.innerHTML='';
-    data.forEach(function(d,i){
-      var li=document.createElement('li');
-      if(i===sel) li.className='sel';
-      li.setAttribute('data-i',i);
-      var s=STAT[d.status];
-      li.innerHTML='<span class="nm">'+esc(d.name)+'</span><span class="badge '+s[0]+'">'+s[1]+'</span>';
-      li.addEventListener('click',function(){sel=i;render();renderDetail();});
-      list.appendChild(li);
-    });
-    cnt.textContent=data.length;
-  }
-  function renderDetail(){
-    if(sel<0){detail.innerHTML='<div class="proto-empty">왼쪽 목록에서 거래처를 선택하세요.</div>';return;}
-    var d=data[sel],s=STAT[d.status];
-    detail.innerHTML='<div class="dnm">'+esc(d.name)+' <span class="badge '+s[0]+'">'+s[1]+'</span></div>'
-      +'<div class="drow"><span class="dk">사업자번호</span><span class="mono">'+(d.biz||'—')+'</span></div>'
-      +'<div class="drow"><span class="dk">유형</span><span>'+esc(d.type)+'</span></div>'
-      +'<div class="drow"><span class="dk">상태</span><span>'+s[1]+(d.status==='tmp'?' — 필수값 확인 후 정상 전환':'')+'</span></div>';
-  }
-  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-
-  function openModal(){err.hidden=true;$('#f-name').value='';$('#f-biz').value='';$('#f-type').value='도매';modal.hidden=false;$('#f-name').focus();}
-  function closeModal(){modal.hidden=true;}
-  function add(status){
-    var name=$('#f-name').value.trim()||'(이름 미입력)';
-    data.push({name:name,biz:$('#f-biz').value.trim(),type:$('#f-type').value,status:status});
-    sel=data.length-1;closeModal();render();renderDetail();
-  }
-  $('#btnNew').addEventListener('click',openModal);
-  $('#btnCancel').addEventListener('click',closeModal);
-  $('#btnDraft').addEventListener('click',function(){add('tmp');});
-  $('#btnSave').addEventListener('click',function(){
-    if(!$('#f-biz').value.trim()){err.hidden=false;return;}
-    add('ok');
+var protoTimer=null;
+function protoState(s){
+  document.querySelectorAll('[data-state]').forEach(function(el){el.style.display = el.dataset.state===s?'':'none';});
+  document.querySelectorAll('[data-chip]').forEach(function(el){
+    var on = el.dataset.chip===s;
+    el.style.background = on?'#26262B':'#fff';
+    el.style.color = on?'#F5F4F1':(el.dataset.chip==='error'?'#A05A50':'#4A463E');
+    el.style.borderColor = on?'#26262B':(el.dataset.chip==='error'?'#E7D3D0':'#E1DFD8');
   });
-  modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+  if(protoTimer){clearTimeout(protoTimer);protoTimer=null;}
+  if(s==='saving'){protoTimer=setTimeout(function(){protoState('done');},1200);}
+}
+document.addEventListener("DOMContentLoaded",function(){
+protoState('idle');
+function fitProto(){
+  var vp=document.getElementById('protoViewport'), fr=document.getElementById('protoFrame');
+  if(!vp||!fr) return;
+  var s=vp.clientWidth/1440;
+  fr.style.transform='scale('+s+')';
+  vp.style.height=(1000*s)+'px';
+}
+fitProto(); window.addEventListener('resize', fitProto);
 
-  render();
-
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
-  document.querySelectorAll('.fx').forEach(function(el){io.observe(el);});
-})();
-</script>
-
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+    document.querySelectorAll('.fx').forEach(el=>io.observe(el));
+});</script>
 </body>
 </html>
