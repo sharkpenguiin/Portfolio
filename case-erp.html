@@ -114,7 +114,7 @@ nav a.navlink:hover{color:#26262B}
 <div class="fx" style="display:flex;flex-direction:column;gap:14px">
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start;border-color:#DCCFC0">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#C08149;color:#fff;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">01</div>
-<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">구축 순서를 뒤집었습니다</b><p style="font-size:14.5px;color:#615D53">처음에는 마스터데이터부터 잡으려 했습니다. 기준이 되는 데이터가 서야 나머지가 붙는다고 봤기 때문입니다.<br>그런데 업무를 파고들수록 순서가 반대였습니다 — 마스터를 한 곳에서 통째로 받는 게 아니라, <b style="color:#26262B">EDI 자료를 먼저 받아 심평원 데이터로 검증한 뒤 마스터로 넣는</b> 구조였고, 고객사조차 자사 업무가 그렇게 흐른다는 것을 인지하지 못하고 있었습니다.<br>내부 합의를 거쳐 <b style="color:#26262B">정산(EDI·흡수율) → 마스터데이터 → 협력사 포털</b>로 순서를 재정의하고 고객사와 확정했습니다. 정산 오류가 곧 억 단위 손실로 이어지는 도메인이라, 이 순서가 먼저여야 뒤가 꼬이지 않습니다.</p></div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">구축 순서를 뒤집었습니다</b><p style="font-size:14.5px;color:#615D53">처음에는 마스터데이터부터 잡으려 했습니다. 기준이 되는 데이터가 서야 나머지가 붙는다고 봤기 때문입니다.<br>그런데 업무를 파고들수록 순서가 반대였습니다 — 마스터를 한 곳에서 통째로 받는 게 아니라, <b style="color:#26262B">EDI 자료를 먼저 받아 심평원 데이터로 검증한 뒤 마스터로 넣는</b> 구조였고, 고객사조차 자사 업무가 그렇게 흐른다는 것을 인지하지 못하고 있었습니다.<br>내부 합의를 거쳐 <b style="color:#26262B">데이터가 생성되는 순서를 기준으로</b> 정산(EDI·흡수율) → 마스터데이터 → 협력사 포털로 순서를 재정의하고 고객사와 확정했습니다. 정산 오류가 곧 억 단위 손실로 이어지는 도메인이라, 이 순서가 먼저여야 뒤가 꼬이지 않습니다.</p></div>
 </div>
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">02</div>
@@ -122,18 +122,22 @@ nav a.navlink:hover{color:#26262B}
 </div>
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">03</div>
-<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">예외는 화면이 아니라 제품 정책으로</b><p style="font-size:14.5px;color:#615D53">사용자 그룹별 규칙을 코드에 박지 않고 파라미터 표로 분리. 새 유형이 생겨도 표에 행만 추가하면 되도록 설계.<br>레거시 데이터 <b style="color:#26262B">2,400만 행</b>(엑셀 기반) 규모를 분석해 마이그레이션 정합성 리스크도 사전 식별했습니다.</p></div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">같은 기능도 누가 보느냐에 따라 달랐습니다</b><p style="font-size:14.5px;color:#615D53">사용자 그룹 5종(병의원·약국·CSO·도매업체·제약사)은 접근 가능한 화면과 데이터 범위가 각각 달랐습니다. 그룹별 <b style="color:#26262B">권한·데이터 접근 정책</b>을 정의하고, 프로토타입으로 화면 단위까지 구현해 실제로 무엇이 보이고 무엇이 가려지는지 확인했습니다.<br>같은 기능이라도 누가 보느냐에 따라 달라지는 부분을 개발 착수 전에 확정했습니다.</p></div>
 </div>
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">04</div>
-<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">모든 결정에 근거와 출처를</b><p style="font-size:14.5px;color:#615D53">3개월간 20회 이상의 회의에서 바뀌는 요구를 결정로그로 통제했습니다.<br>결정·근거·출처·상태 라벨을 남겨, 번복돼도 과거 회의록 재검토 없이 근거를 즉시 소명합니다.</p></div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">예외는 화면이 아니라 제품 정책으로</b><p style="font-size:14.5px;color:#615D53">사용자 그룹별 규칙을 코드에 박지 않고 파라미터 표로 분리. 새 유형이 생겨도 표에 행만 추가하면 되도록 설계.<br>레거시 데이터 <b style="color:#26262B">2,400만 행</b>(엑셀 기반) 규모를 분석해 마이그레이션 정합성 리스크도 사전 식별했습니다.</p></div>
 </div>
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">05</div>
-<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">화면 단위 PRD 체계 — SCR-ID</b><p style="font-size:14.5px;color:#615D53">화면 1개 = 문서 1섹션, 10섹션 구조. 각 화면에 SCR-ID를 부여해 PRD·기능명세·결정로그가 같은 ID로 연결되도록 설계.</p></div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">모든 결정에 근거와 출처를</b><p style="font-size:14.5px;color:#615D53">3개월간 20회 이상의 회의에서 바뀌는 요구를 결정로그로 통제했습니다.<br>결정·근거·출처·상태 라벨을 남겨, 번복돼도 과거 회의록 재검토 없이 근거를 즉시 소명합니다.</p></div>
 </div>
 <div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
 <div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">06</div>
+<div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">화면 단위 PRD 체계 — SCR-ID</b><p style="font-size:14.5px;color:#615D53">화면 1개 = 문서 1섹션, 10섹션 구조. 각 화면에 SCR-ID를 부여해 PRD·기능명세·결정로그가 같은 ID로 연결되도록 설계.</p></div>
+</div>
+<div class="card" style="padding:28px 30px;display:flex;gap:22px;align-items:flex-start">
+<div style="flex:none;width:38px;height:38px;border-radius:11px;background:#F4EBE1;color:#B8825A;display:flex;align-items:center;justify-content:center;font:700 15px/1 ui-monospace">07</div>
 <div><b style="display:block;font:650 18px/1.35 'Pretendard';margin-bottom:6px">정합성은 사람이 아니라 체크리스트로</b><p style="font-size:14.5px;color:#615D53">18개 화면·기능 간 필드·상태 정합성을 AI 스킬 기반 검증 체크리스트로 통제해 누락을 구조적으로 방지.<br>정보구조(IA) 기준으로 구현 범위를 이번 범위와 차기 과제로 분류·합의해 범위 확산도 함께 통제했습니다.</p></div>
 </div>
 </div>
