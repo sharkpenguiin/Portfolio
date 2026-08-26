@@ -9,6 +9,7 @@
 <meta property="og:description" content="전국 7개 유역·39개소·8공정·256억 규모 국가 사업 품질점검과 기재부 디브레인 결산 개편 케이스.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#F7F7F5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,7 +24,20 @@
   --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --pad:clamp(20px,5vw,64px);
 }
+html{color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
+/* 더블탭 확대 지연 제거 */
+body{touch-action:manipulation}
+/* sticky nav가 앵커 도착 지점을 가리지 않게 */
+h1,h2,h3,section[id]{scroll-margin-top:84px}
+/* 헤딩 위도우 방지 */
+h1,h2,h3{text-wrap:balance}
+/* 숫자 폭 고정 — 열 비교 시 흔들리지 않게 */
+.num,.v,.res b,.ev b,.big b,.strip .num{font-variant-numeric:tabular-nums}
+/* 키보드 사용자용 본문 바로가기 */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--paper);
+  padding:11px 18px;font-size:13px;font-weight:500}
+.skip:focus{left:0}
 html{scroll-behavior:smooth}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);
   font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;
@@ -128,7 +142,7 @@ a.block:hover{background:var(--tint)}
 .legacy p{font-size:13.5px;line-height:1.75;color:var(--body)}
 
 .next{display:flex;justify-content:space-between;align-items:center;gap:20px;
-  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:.15s}
+  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:background .15s,color .15s,border-color .15s}
 .next:hover{background:#000}
 .next .label{color:#9AA1A9}
 .next b{display:block;margin-top:9px;font-size:21px;letter-spacing:-.025em;font-weight:700}
@@ -148,6 +162,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 </head>
 <body>
 
+<a class="skip" href="#main">본문 바로가기</a>
 <nav class="nav"><div class="wrap navin">
 <a class="brand" href="index.html">Joe Myeongho<span> · PM</span></a>
 <div class="navlinks">
@@ -164,11 +179,11 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 
 <div class="wrap">
 
-<header>
+<header id="main">
 <a class="back" href="index.html">← 홈으로</a>
 <div class="eyebrow">Case 04 · 공공 SI</div>
 <h1 class="h1">검증하는 눈에서<br><span class="mark">기준</span>을 세우는 손으로</h1>
-<p class="lede">256억 규모 국가 사업 품질점검에서 "무엇을 신뢰할지" 판단하는 눈을 키웠고, 기재부 결산 개편에서 요구사항을 ID로 추적하는 체계를 만들었습니다.<br>front-loading 원칙의 출발점입니다.</p>
+<p class="lede">256억 규모 국가 사업 품질점검에서 “무엇을 신뢰할지” 판단하는 눈을 키웠고, 기재부 결산 개편에서 요구사항을 ID로 추적하는 체계를 만들었습니다.<br>front-loading 원칙의 출발점입니다.</p>
 <div class="strip">
 <div><span class="num">256억</span><span>사업 규모</span></div>
 <div><span class="num">39개소</span><span>전국 7유역 점검</span></div>
@@ -205,7 +220,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 <section>
 <div class="head"><h2>두 개의 국가 사업</h2><span class="label">Context</span></div>
 <div class="fx grid g2">
-<div class="block"><span class="label">수자원 · 정수장 AI 자율운영</span><h3>국가 사업 품질점검 (PM)</h3><p>전국 7개 유역·정수장 39개소·정수처리 8개 공정 대상 256억 규모 사업. 산출물·요구사항이 기준을 충족하는지 점검하며 "근거 없이는 통과시키지 않는다"를 몸에 익힌 시기.</p></div>
+<div class="block"><span class="label">수자원 · 정수장 AI 자율운영</span><h3>국가 사업 품질점검 (PM)</h3><p>전국 7개 유역·정수장 39개소·정수처리 8개 공정 대상 256억 규모 사업. 산출물·요구사항이 기준을 충족하는지 점검하며 “근거 없이는 통과시키지 않는다”를 몸에 익힌 시기.</p></div>
 <div class="block"><span class="label">기재부 · 디브레인 결산 개편</span><h3>전 중앙부처 결산 시스템 (PM)</h3><p>전 중앙부처를 대상으로 한 결산 개편 사업. RFP 요구를 ID로 추적하는 RTM을 운영하고, 각 부처 결산 공무원이 참여한 UT를 직접 운영했습니다.</p></div>
 </div>
 </section>
@@ -277,7 +292,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 <div class="fx principle">
 <span class="eyebrow">RTM · 기재부 RFP-ID 매핑</span>
 <h2>결정로그·SCR-ID의 기원</h2>
-<p>기재부 사업에서 RFP의 각 요구에 ID를 부여하고 산출물과 매핑한 요구사항 추적표(RTM)를 운영했습니다. "모든 결과를 ID로 연결한다"는 이 경험이 이후 B2B ERP의 <b>SCR-ID</b>와 <b>결정로그</b>로 이어졌습니다.</p>
+<p>기재부 사업에서 RFP의 각 요구에 ID를 부여하고 산출물과 매핑한 요구사항 추적표(RTM)를 운영했습니다. “모든 결과를 ID로 연결한다”는 이 경험이 이후 B2B ERP의 <b>SCR-ID</b>와 <b>결정로그</b>로 이어졌습니다.</p>
 </div>
 </section>
 

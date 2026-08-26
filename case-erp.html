@@ -9,6 +9,7 @@
 <meta property="og:description" content="사용자 그룹 5종 × 18개 화면·기능을 SCR-ID·결정로그·제품 정책으로 통제한 단독 기획 케이스.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#F7F7F5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,7 +24,20 @@
   --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --pad:clamp(20px,5vw,64px);
 }
+html{color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
+/* 더블탭 확대 지연 제거 */
+body{touch-action:manipulation}
+/* sticky nav가 앵커 도착 지점을 가리지 않게 */
+h1,h2,h3,section[id]{scroll-margin-top:84px}
+/* 헤딩 위도우 방지 */
+h1,h2,h3{text-wrap:balance}
+/* 숫자 폭 고정 — 열 비교 시 흔들리지 않게 */
+.num,.v,.res b,.ev b,.big b,.strip .num{font-variant-numeric:tabular-nums}
+/* 키보드 사용자용 본문 바로가기 */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--paper);
+  padding:11px 18px;font-size:13px;font-weight:500}
+.skip:focus{left:0}
 html{scroll-behavior:smooth}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);
   font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;
@@ -152,7 +166,7 @@ td b{color:var(--warn);font-weight:600}
 
 /* 다음 케이스 */
 .next{display:flex;justify-content:space-between;align-items:center;gap:20px;
-  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:.15s}
+  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:background .15s,color .15s,border-color .15s}
 .next:hover{background:#000}
 .next .label{color:#9AA1A9}
 .next b{display:block;margin-top:9px;font-size:21px;letter-spacing:-.025em;font-weight:700}
@@ -177,6 +191,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 </head>
 <body>
 
+<a class="skip" href="#main">본문 바로가기</a>
 <nav class="nav"><div class="wrap navin">
 <a class="brand" href="index.html">Joe Myeongho<span> · PM</span></a>
 <div class="navlinks">
@@ -193,7 +208,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 
 <div class="wrap">
 
-<header>
+<header id="main">
 <a class="back" href="index.html">← 홈으로</a>
 <div class="eyebrow">Case 01 · B2B ERP</div>
 <h1 class="h1">제약 유통 B2B ERP<br>기획 전 <span class="mark">체계</span>를 설계하다</h1>
@@ -216,7 +231,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 <span class="eyebrow">Real artifact · IA 정보구조도 실물 (비식별화)</span>
 <h3>직접 설계한 ERP 전체 정보구조 — 18개 메뉴 최종본</h3>
 <div class="frame">
-<img src="ia-structure.png" alt="ERP 정보구조도 (고객사 비식별화)">
+<img src="ia-structure.png" width="1400" height="2491" loading="lazy" decoding="async" alt="ERP 정보구조도 (고객사 비식별화)">
 <span class="ovl">고객사 ERP 정보구조도</span>
 </div>
 <p class="note">실제 프로젝트 최종본입니다.<br>고객사명만 비식별화했고 구조는 그대로 — 로그인부터 시스템 설정까지, 이 트리의 각 메뉴가 SCR-ID 단위 PRD와 1:1로 연결됩니다.</p>
@@ -293,7 +308,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 
 <div class="fx artifact">
 <span class="eyebrow">Real artifact · 결정로그 실물 발췌 (비식별화)</span>
-<h3>메뉴별 결정 로그 — "거래처 · 약국" 섹션 원문</h3>
+<h3>메뉴별 결정 로그 — “거래처 · 약국” 섹션 원문</h3>
 <div class="quote">
 <p>· 약국만(도매 분리), 미분류 거래처 → 백그라운드 사업자 조회로 재분류 〔260408,260506〕</p>
 <p>· 도매매출로 자동생성, 코드 3시작 6자리, 상태↔개폐업 분리, 가등록(명칭·사업자·주소) 〔260615,260618〕</p>

@@ -9,6 +9,7 @@
 <meta property="og:description" content="커스텀 AI 스킬 10종, Hermes 기반 SSOT Q&A 봇, 5대 검증 기준으로 반복 업무를 시스템화한 케이스.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#F7F7F5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,7 +24,20 @@
   --sans:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --pad:clamp(20px,5vw,64px);
 }
+html{color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
+/* 더블탭 확대 지연 제거 */
+body{touch-action:manipulation}
+/* sticky nav가 앵커 도착 지점을 가리지 않게 */
+h1,h2,h3,section[id]{scroll-margin-top:84px}
+/* 헤딩 위도우 방지 */
+h1,h2,h3{text-wrap:balance}
+/* 숫자 폭 고정 — 열 비교 시 흔들리지 않게 */
+.num,.v,.res b,.ev b,.big b,.strip .num{font-variant-numeric:tabular-nums}
+/* 키보드 사용자용 본문 바로가기 */
+.skip{position:absolute;left:-9999px;top:0;z-index:100;background:var(--ink);color:var(--paper);
+  padding:11px 18px;font-size:13px;font-weight:500}
+.skip:focus{left:0}
 html{scroll-behavior:smooth}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);
   font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;
@@ -135,7 +149,7 @@ section{padding:clamp(48px,6.5vw,76px) 0;border-bottom:1px solid var(--rule)}
 .res p span{color:var(--muted)}
 
 .next{display:flex;justify-content:space-between;align-items:center;gap:20px;
-  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:.15s}
+  background:var(--ink);color:var(--paper);padding:28px 30px;margin-top:34px;transition:background .15s,color .15s,border-color .15s}
 .next:hover{background:#000}
 .next .label{color:#9AA1A9}
 .next b{display:block;margin-top:9px;font-size:21px;letter-spacing:-.025em;font-weight:700}
@@ -158,6 +172,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 </head>
 <body>
 
+<a class="skip" href="#main">본문 바로가기</a>
 <nav class="nav"><div class="wrap navin">
 <a class="brand" href="index.html">Joe Myeongho<span> · PM</span></a>
 <div class="navlinks">
@@ -174,7 +189,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 
 <div class="wrap">
 
-<header>
+<header id="main">
 <a class="back" href="index.html">← 홈으로</a>
 <div class="eyebrow">Case 02 · AI 시스템<span class="pill">차별화 핵심</span></div>
 <h1 class="h1">반복 업무를<br><span class="mark">시스템</span>으로 바꾸다</h1>
@@ -191,7 +206,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 <div class="head"><h2>문제</h2><span class="label">Problem</span></div>
 <div class="fx grid g3">
 <div class="block"><h3>같은 일을 매번 또 손으로</h3><p>회의록 정리·명세 작성·검수가 매 프로젝트마다 반복되며 사람에 따라 품질이 흔들렸습니다.</p></div>
-<div class="block"><h3>답은 늘 여기저기 흩어져 있고</h3><p>"이거 어떻게 정해졌죠?" 질문의 답이 슬랙·문서·기억에 분산돼 있었습니다.</p></div>
+<div class="block"><h3>답은 늘 여기저기 흩어져 있고</h3><p>“이거 어떻게 정해졌죠?” 질문의 답이 슬랙·문서·기억에 분산돼 있었습니다.</p></div>
 <div class="block"><h3>AI 결과는 그대로 믿기엔 불안</h3><p>AI 초안은 빠르지만 근거·정합성 검증 없이는 산출물에 쓸 수 없었습니다.</p></div>
 </div>
 </section>
@@ -210,7 +225,7 @@ footer a:hover{color:var(--sig);border-color:var(--sig)}
 
 <div class="jrow"><span class="label">02</span>
 <div><h3>단일 진실 소스(SSOT) + Q&amp;A 봇</h3>
-<p class="sum">결정·문서를 SSOT로 모으고, 슬랙 Q&amp;A 봇이 그 근거를 인용해 답하도록 구성해 "어떻게 정해졌는지"를 즉시 확인합니다.</p></div></div>
+<p class="sum">결정·문서를 SSOT로 모으고, 슬랙 Q&amp;A 봇이 그 근거를 인용해 답하도록 구성해 “어떻게 정해졌는지”를 즉시 확인합니다.</p></div></div>
 
 <div class="jrow"><span class="label">03</span>
 <div><h3>5대 검증 기준으로 사람이 통제</h3>
@@ -248,7 +263,7 @@ internal-meeting-review<span>_260521</span>.skill
 <p>· 이슈 발견 시 즉시 PM에게 공유하고 의견을 말한다. 수정은 반드시 PM 확인 후 진행한다.</p>
 <p>· 검수 후 수정이 필요하면 직접 편집이 아니라 <b>JSON 패치를 생성</b>한다 — PM이 Apps Script로 적용하는 흐름.</p>
 </div>
-<p class="note">AI에게도 "수정은 PM 확인 후"를 규칙으로 박아둔 것 — 자동화 안에서도 최종 판단은 사람이 갖습니다.</p>
+<p class="note">AI에게도 “수정은 PM 확인 후”를 규칙으로 박아둔 것 — 자동화 안에서도 최종 판단은 사람이 갖습니다.</p>
 </div>
 
 <div class="fx chat" style="margin-top:16px">
@@ -291,7 +306,7 @@ internal-meeting-review<span>_260521</span>.skill
 
 <section>
 <div class="head"><h2>SSOT 슬랙 Q&amp;A 봇 <span class="mark">Hermes</span></h2><span class="label">Hermes</span></div>
-<p class="lede">"이거 어떻게 정해졌죠?"에 근거를 인용해 답하는 봇. <b>오픈소스 에이전트 Hermes</b>를 붙여 SSOT 기반으로 구성했고, 소스 큐레이션 → 검증 루프 3스텝으로 운영합니다.</p>
+<p class="lede">“이거 어떻게 정해졌죠?”에 근거를 인용해 답하는 봇. <b>오픈소스 에이전트 Hermes</b>를 붙여 SSOT 기반으로 구성했고, 소스 큐레이션 → 검증 루프 3스텝으로 운영합니다.</p>
 <div class="fx grid g3">
 <div class="block"><span class="label">01 · Curate</span><h3>소스 큐레이션</h3><p>결정로그·명세·회의록을 SSOT로 모으고 인덱싱.</p></div>
 <div class="block"><span class="label">02 · Answer</span><h3>근거 인용 응답</h3><p>Hermes가 질문에 SSOT 출처를 인용해 답변.</p></div>
